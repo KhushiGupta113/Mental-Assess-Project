@@ -64,12 +64,25 @@ class DashboardController extends Controller
         // AI insights based on real data
         $insights = $this->generateInsights($user, $recentMoods, $recentResults);
 
+        // Calculate Averages
+        $avgMood = MoodLog::where('user_id', $user->id)
+            ->where('created_at', '>=', Carbon::now()->subDays(7))
+            ->get()
+            ->avg(fn($m) => $m->mood_score ?? $this->emojiToScore($m->mood_emoji));
+            
+        $avgSleep = MoodLog::where('user_id', $user->id)
+            ->where('created_at', '>=', Carbon::now()->subDays(7))
+            ->whereNotNull('sleep_hours')
+            ->avg('sleep_hours');
+
         // Stats
         $stats = [
             'total_assessments' => Result::where('user_id', $user->id)->count(),
             'total_moods' => MoodLog::where('user_id', $user->id)->count(),
             'total_journals' => JournalEntry::where('user_id', $user->id)->count(),
             'streak' => $streak,
+            'avg_mood' => round($avgMood ?? 0, 1),
+            'avg_sleep' => round($avgSleep ?? 0, 1),
         ];
 
         // Today's mood

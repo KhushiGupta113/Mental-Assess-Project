@@ -5,6 +5,8 @@ import daisyui from 'daisyui';
 
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
+
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -74,6 +76,18 @@ export default {
                     800: '#3730a3',
                     900: '#312e81',
                 },
+                // Theme-aware colors via CSS variables
+                'th-primary': 'var(--th-primary)',
+                'th-primary-light': 'var(--th-primary-light)',
+                'th-primary-dark': 'var(--th-primary-dark)',
+                'th-accent': 'var(--th-accent)',
+                'th-accent-light': 'var(--th-accent-light)',
+                'th-surface': 'var(--th-surface)',
+                'th-surface-alt': 'var(--th-surface-alt)',
+                'th-bg': 'var(--th-bg)',
+                'th-text': 'var(--th-text)',
+                'th-text-muted': 'var(--th-text-muted)',
+                'th-border': 'var(--th-border)',
             },
             animation: {
                 'breathe': 'breathe 6s ease-in-out infinite',

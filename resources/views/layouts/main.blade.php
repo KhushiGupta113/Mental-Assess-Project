@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="nature">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="nature" data-color-theme="sage">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,16 @@
         <meta name="description" content="AI-assisted emotional wellness companion with clinically inspired self-assessments and personalized support guidance.">
 
         <title>{{ config('app.name', 'MindAssess') }} — Wellness Companion</title>
+
+        {{-- Prevent FOUC: apply dark/theme immediately --}}
+        <script>
+            (function(){
+                const dm = localStorage.getItem('ma_dark');
+                const ct = localStorage.getItem('ma_color_theme') || 'sage';
+                if(dm === 'true') document.documentElement.classList.add('dark');
+                document.documentElement.setAttribute('data-color-theme', ct);
+            })();
+        </script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,46 +33,68 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-base-100 min-h-screen flex flex-col">
+    <body class="font-sans antialiased min-h-screen flex flex-col" style="background:var(--th-bg);color:var(--th-text)">
 
         {{-- ═══ Navigation ═══ --}}
-        <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-sage-100/60" x-data="{ mobileOpen: false }">
+        <nav class="sticky top-0 z-50 backdrop-blur-lg border-b" style="background:var(--th-nav-bg);border-color:var(--th-border)" x-data="{ mobileOpen: false, themePicker: false }">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     {{-- Logo --}}
                     <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
-                        <div class="w-9 h-9 bg-gradient-to-br from-sage-400 to-teal-500 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105" style="background:linear-gradient(135deg, var(--th-primary), var(--th-accent))">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                         </div>
-                        <span class="text-lg font-serif font-bold text-sage-800">MindAssess</span>
+                        <span class="text-lg font-serif font-bold t-text">MindAssess</span>
                     </a>
 
                     {{-- Desktop Nav --}}
                     <div class="hidden md:flex items-center space-x-1">
-                        <a href="{{ route('assessments.index') }}" class="nav-link px-3 py-2 rounded-lg hover:bg-sage-50 {{ request()->routeIs('assessments.*') ? 'nav-link-active' : '' }}">Assessments</a>
-                        <a href="{{ route('resources.index') }}" class="nav-link px-3 py-2 rounded-lg hover:bg-sage-50 {{ request()->routeIs('resources.*') ? 'nav-link-active' : '' }}">Resources</a>
-                        <a href="{{ route('about') }}" class="nav-link px-3 py-2 rounded-lg hover:bg-sage-50 {{ request()->routeIs('about') ? 'nav-link-active' : '' }}">About</a>
-                        <a href="{{ route('crisis.index') }}" class="text-red-500 hover:text-red-600 font-semibold text-sm px-3 py-2 rounded-lg hover:bg-red-50 transition-colors">Crisis Help</a>
+                        <a href="{{ route('assessments.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('assessments.*') ? 'nav-link-active' : '' }}">Assessments</a>
+                        <a href="{{ route('resources.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('resources.*') ? 'nav-link-active' : '' }}">Resources</a>
+                        <a href="{{ route('about') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('about') ? 'nav-link-active' : '' }}">About</a>
+                        <a href="{{ route('crisis.index') }}" class="text-red-500 hover:text-red-600 font-semibold text-sm px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Crisis Help</a>
                     </div>
 
-                    {{-- Auth Buttons --}}
+                    {{-- Theme & Auth --}}
                     <div class="hidden md:flex items-center space-x-3">
+                        {{-- Dark Mode Toggle --}}
+                        <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Toggle Dark Mode">
+                            <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                        </button>
+
+                        {{-- Theme Picker --}}
+                        <div class="relative" x-data="{ themeOpen: false }">
+                            <button @click="themeOpen = !themeOpen" class="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Choose Theme">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                            </button>
+                            <div x-show="themeOpen" @click.away="themeOpen = false" x-transition class="absolute right-0 mt-2 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-lift border border-gray-100 dark:border-gray-700 z-50 flex gap-2">
+                                <button onclick="setTheme('sage')" class="w-6 h-6 rounded-full bg-[#697a59] hover:scale-110 transition-transform" title="Sage Garden"></button>
+                                <button onclick="setTheme('lavender')" class="w-6 h-6 rounded-full bg-[#7c6fae] hover:scale-110 transition-transform" title="Lavender Dream"></button>
+                                <button onclick="setTheme('rose')" class="w-6 h-6 rounded-full bg-[#c06c84] hover:scale-110 transition-transform" title="Rose Garden"></button>
+                                <button onclick="setTheme('ocean')" class="w-6 h-6 rounded-full bg-[#4a90a4] hover:scale-110 transition-transform" title="Ocean Breeze"></button>
+                                <button onclick="setTheme('peach')" class="w-6 h-6 rounded-full bg-[#d98a6a] hover:scale-110 transition-transform" title="Sunset Peach"></button>
+                            </div>
+                        </div>
+
+                        <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
+
                         @auth
-                            <a href="{{ route('dashboard') }}" class="nav-link px-3 py-2 rounded-lg hover:bg-sage-50 {{ request()->routeIs('dashboard') ? 'nav-link-active' : '' }}">Dashboard</a>
-                            <a href="{{ route('journal.index') }}" class="nav-link px-3 py-2 rounded-lg hover:bg-sage-50 {{ request()->routeIs('journal.*') ? 'nav-link-active' : '' }}">Journal</a>
-                            <a href="{{ route('mood.index') }}" class="nav-link px-3 py-2 rounded-lg hover:bg-sage-50 {{ request()->routeIs('mood.*') ? 'nav-link-active' : '' }}">Mood</a>
+                            <a href="{{ route('dashboard') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('dashboard') ? 'nav-link-active' : '' }}">Dashboard</a>
+                            <a href="{{ route('journal.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('journal.*') ? 'nav-link-active' : '' }}">Journal</a>
+                            <a href="{{ route('mood.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('mood.*') ? 'nav-link-active' : '' }}">Mood</a>
 
                             <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-sage-50 hover:bg-sage-100 transition-colors">
+                                <button @click="open = !open" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl t-surface border border-transparent hover:border-nature transition-colors">
                                     <span class="text-lg">{{ Auth::user()->avatar_emoji ?? '🌱' }}</span>
-                                    <span class="text-sm font-medium text-sage-700">{{ Auth::user()->name }}</span>
-                                    <svg class="w-4 h-4 text-sage-400" fill="none" stroke="currentColor" viewBox="0 0 20 20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7l5 5 5-5"/></svg>
+                                    <span class="text-sm font-medium t-text">{{ Auth::user()->name }}</span>
+                                    <svg class="w-4 h-4 t-muted" fill="none" stroke="currentColor" viewBox="0 0 20 20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7l5 5 5-5"/></svg>
                                 </button>
-                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lift border border-sage-100 py-2 z-50">
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-sage-700 hover:bg-sage-50">Profile</a>
+                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 t-card rounded-xl shadow-lift border border-nature py-2 z-50">
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm t-text hover:bg-black/5 dark:hover:bg-white/5">Profile</a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-sage-700 hover:bg-sage-50">Log Out</button>
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm t-text hover:bg-black/5 dark:hover:bg-white/5">Log Out</button>
                                     </form>
                                 </div>
                             </div>
@@ -295,6 +327,39 @@
 
         <!-- AOS -->
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script>AOS.init({ duration: 700, once: true, offset: 80 });</script>
+        <script>
+            AOS.init({ duration: 700, once: true, offset: 80 });
+
+            // Theme Logic
+            function toggleDarkMode() {
+                const html = document.documentElement;
+                const isDark = html.classList.contains('dark');
+                if (isDark) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('ma_dark', 'false');
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('ma_dark', 'true');
+                }
+            }
+
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-color-theme', theme);
+                localStorage.setItem('ma_color_theme', theme);
+                
+                // Optionally send to server if user is logged in (fire and forget)
+                @auth
+                fetch('{{ route("profile.update") }}', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ preferences: { theme: theme } })
+                }).catch(e => console.log('Theme sync error', e));
+                @endauth
+            }
+        </script>
     </body>
 </html>

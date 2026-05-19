@@ -1,59 +1,146 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MindAssess — AI-Assisted Emotional Wellness Companion 🌿
+
+**MindAssess** is a modern, deeply personalized mental health self-assessment and tracking platform. Built with a focus on privacy, aesthetics, and empathetic guidance, it helps users understand their mental well-being through clinically inspired screening tools, daily mood logs, and intelligent AI insights.
+
+![MindAssess Banner](https://via.placeholder.com/1200x400.png/f6f7f5/697a59?text=MindAssess+Wellness+Companion)
+
+> **⚠️ Disclaimer:** This platform is not a medical diagnostic tool. It is designed for educational purposes and self-reflection. If you or someone you know is in crisis, please seek professional help immediately.
+
+---
+
+## ✨ Key Features
+
+### 📋 Clinically-Inspired Assessments
+Access a library of validated self-assessment screening tools (e.g., PHQ-9 for Depression, GAD-7 for Anxiety, PSS for Stress). Features include:
+*   Real-time client-side search and category filtering.
+*   Automated scoring with dynamic severity indicators.
+*   Historical tracking of assessment results.
+
+### 🤖 AI-Powered Wellness Insights & Chatbot
+*   **Insights Engine:** Automatically analyzes your recent mood logs, sleep patterns, and assessment scores to generate personalized self-care recommendations on your dashboard.
+*   **MindAssess Buddy:** An integrated, floating AI chatbot that offers empathetic listening, quick coping strategies (like breathing exercises), and wellness guidance.
+
+### 📊 Mood & Sleep Tracking
+*   **Daily Check-ins:** Log your emotional state using an intuitive emoji-based interface, along with sleep hours, energy levels, and personal notes.
+*   **30-Day Analytics:** Interactive line charts mapping your mood, sleep, and energy correlations over time.
+*   **Calendar Heart Visualization:** A unique calendar view where each day is represented by an SVG heart. The outer outline color indicates your mood score, while the inner outline reflects your sleep quality.
+
+### 🎨 Beautiful, Themed UI/UX
+*   **Premium Glassmorphism Aesthetics:** Clean, calming UI tailored for psychological safety.
+*   **5 Pastel Color Themes:** Choose your vibe — Sage Garden, Lavender Dream, Rose Garden, Ocean Breeze, or Sunset Peach.
+*   **Dark Mode Support:** Built-in seamless toggling between light and dark modes to reduce eye strain.
+
+### 🚨 Localized Crisis Support
+*   A dedicated crisis center module that automatically prioritizes emergency helplines and resources based on your specified country.
+
+### 📝 Cozy Journaling
+*   A private space to write daily reflections, helping to contextualize your mood data over time.
+
+---
+
+## 🛠 Tech Stack
+
+MindAssess is built using a modern, robust, and scalable technology stack:
+
+*   **Backend Framework:** [Laravel 11.x](https://laravel.com) (PHP)
+*   **Database:** [MongoDB](https://www.mongodb.com/) (Using `mongodb/laravel-mongodb` Eloquent driver)
+*   **Frontend Templating:** Laravel Blade
+*   **Styling:** [Tailwind CSS](https://tailwindcss.com/) with custom variable-based theming
+*   **UI Components:** [DaisyUI](https://daisyui.com/)
+*   **Interactivity:** [Alpine.js](https://alpinejs.dev/)
+*   **Data Visualization:** [Chart.js](https://www.chartjs.org/)
+*   **Markdown Parsing:** Marked.js (for the AI Chatbot)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+*   PHP >= 8.2
+*   Composer
+*   Node.js & NPM
+*   MongoDB Server (Local or Atlas)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Shraddhagupta37/Mental-Assess-Project.git
+   cd Mental-Assess-Project
+   ```
+
+2. **Install PHP dependencies:**
+   ```bash
+   composer install
+   ```
+
+3. **Install Frontend dependencies:**
+   ```bash
+   npm install
+   ```
+
+4. **Environment Setup:**
+   Copy the example environment file and generate an application key.
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+5. **Configure MongoDB:**
+   Open the `.env` file and update your MongoDB connection string. Ensure the `DB_CONNECTION` is set to `mongodb`.
+   ```env
+   DB_CONNECTION=mongodb
+   DB_HOST=127.0.0.1
+   DB_PORT=27017
+   DB_DATABASE=mindassess
+   ```
+
+6. **Compile Frontend Assets:**
+   ```bash
+   npm run build
+   ```
+
+7. **Run Database Migrations & Seeders:**
+   *(Note: As this uses MongoDB, migrations are primarily for schema indexing, but seeders are critical to populate the assessments and crisis helplines).*
+   ```bash
+   php artisan db:seed
+   ```
+
+8. **Start the Development Server:**
+   ```bash
+   php artisan serve
+   ```
+   Visit `http://localhost:8000` in your browser.
+
+---
+
+## 📂 Project Structure Highlights
+
+*   **`app/Models/`**: Contains MongoDB Eloquent models (`User`, `Assessment`, `MoodLog`, `JournalEntry`, `Result`, etc.).
+*   **`app/Http/Controllers/`**: Core logic for dashboards, onboarding, tracking, and AI integration.
+*   **`resources/views/`**: Blade templates. Key complex views include `dashboard.blade.php`, `mood/index.blade.php` (calendar & charts), and `layouts/main.blade.php` (Navigation, Theming, Chatbot).
+*   **`resources/css/app.css`**: Contains the extensive CSS custom property (variable) definitions that power the 5 pastel themes and dark mode.
+
+---
+
+## 🤝 Contributing
+
+Contributions make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <i>Take a deep breath. You're doing great.</i>
 </p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

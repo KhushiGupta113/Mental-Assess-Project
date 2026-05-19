@@ -49,7 +49,29 @@ class MoodController extends Controller
             'avg_sleep' => round($avgSleep ?? 0, 1),
         ];
 
-        return view('mood.index', compact('moodLogs', 'weeklyData', 'stats'));
+        // Calendar Data for current month
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+        $startDayOfWeek = $startOfMonth->dayOfWeek; // 0 (Sunday) - 6 (Saturday)
+        $daysInMonth = $startOfMonth->daysInMonth;
+
+        $monthLogs = MoodLog::where('user_id', $user->id)
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->get();
+
+        $calendarData = [];
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $calendarData[$i] = ['mood' => null, 'sleep' => null];
+        }
+
+        foreach ($monthLogs as $log) {
+            $day = $log->created_at->day;
+            // Prefer the latest log for a day if multiple exist
+            $calendarData[$day]['mood'] = $log->mood_score ?? $this->emojiToScore($log->mood_emoji);
+            $calendarData[$day]['sleep'] = $log->sleep_hours;
+        }
+
+        return view('mood.index', compact('moodLogs', 'weeklyData', 'stats', 'calendarData', 'startDayOfWeek', 'daysInMonth', 'startOfMonth'));
     }
 
     public function store(Request $request)
