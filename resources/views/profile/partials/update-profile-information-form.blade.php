@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium t-text">
             {{ __('Profile Information') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm t-muted">
             {{ __("Update your account's profile information and email address.") }}
         </p>
     </header>
@@ -16,6 +16,21 @@
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
+
+        <div x-data="{ selectedAvatar: '{{ old('avatar', $user->avatar ?? '🍃') }}' }" class="mb-6">
+            <x-input-label :value="__('Avatar')" class="mb-2" />
+            <input type="hidden" name="avatar" x-model="selectedAvatar">
+            <div class="flex flex-wrap gap-2">
+                @foreach(['🍃', '🌸', '🌊', '☀️', '🌙', '⭐', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯', '🐶', '🐱', '🐰', '🦉', '🦋', '🍄', '🌻'] as $av)
+                <button type="button" @click="selectedAvatar = '{{ $av }}'"
+                        :class="selectedAvatar === '{{ $av }}' ? 'ring-2 ring-th-primary ring-offset-2 scale-110 bg-th-primary-light' : 'bg-th-surface-alt hover:scale-110 opacity-70 hover:opacity-100'"
+                        class="w-10 h-10 rounded-full flex items-center justify-center transition-all text-xl">
+                    {{ $av }}
+                </button>
+                @endforeach
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -30,10 +45,10 @@
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
-                    <p class="text-sm mt-2 text-gray-800">
+                    <p class="text-sm mt-2 t-text">
                         {{ __('Your email address is unverified.') }}
 
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button form="send-verification" class="underline text-sm t-muted hover:t-text rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -49,7 +64,7 @@
 
         <div>
             <x-input-label for="age_group" :value="__('Age Group')" />
-            <select id="age_group" name="age_group" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+            <select id="age_group" name="age_group" class="mt-1 block w-full border-th-border-strong t-surface t-text focus:border-th-primary focus:ring-th-primary rounded-md shadow-sm">
                 <option value="">Select an option</option>
                 <option value="under_18" {{ old('age_group', $user->age_group) == 'under_18' ? 'selected' : '' }}>Under 18</option>
                 <option value="18-24" {{ old('age_group', $user->age_group) == '18-24' ? 'selected' : '' }}>18 - 24</option>
@@ -69,7 +84,7 @@
 
         <div>
             <x-input-label for="lifestyle_habits" :value="__('Lifestyle Habits')" />
-            <textarea id="lifestyle_habits" name="lifestyle_habits" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="3" placeholder="Briefly describe your diet, exercise, and hobbies">{{ old('lifestyle_habits', $user->lifestyle_habits) }}</textarea>
+            <textarea id="lifestyle_habits" name="lifestyle_habits" class="mt-1 block w-full border-th-border-strong t-surface t-text focus:border-th-primary focus:ring-th-primary rounded-md shadow-sm" rows="3" placeholder="Briefly describe your diet, exercise, and hobbies">{{ old('lifestyle_habits', $user->lifestyle_habits) }}</textarea>
             <x-input-error class="mt-2" :messages="$errors->get('lifestyle_habits')" />
         </div>
 
@@ -80,8 +95,8 @@
         </div>
 
         <div class="flex items-center mt-4">
-            <input id="is_anonymous" type="checkbox" name="is_anonymous" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('is_anonymous', $user->is_anonymous) ? 'checked' : '' }}>
-            <label for="is_anonymous" class="ml-2 text-sm text-gray-600">{{ __('Anonymous Mode (Hide name on public interactions)') }}</label>
+            <input id="is_anonymous" type="checkbox" name="is_anonymous" value="1" class="rounded border-th-border-strong text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('is_anonymous', $user->is_anonymous) ? 'checked' : '' }}>
+            <label for="is_anonymous" class="ml-2 text-sm t-muted">{{ __('Anonymous Mode (Hide name on public interactions)') }}</label>
         </div>
 
         <div class="flex items-center gap-4">
@@ -93,9 +108,10 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
+                    class="text-sm t-muted"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>
     </form>
 </section>
+

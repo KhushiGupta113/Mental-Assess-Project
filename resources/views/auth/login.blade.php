@@ -1,47 +1,52 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="text-center mb-8">
+        <h1 class="text-2xl font-serif font-bold t-text">Welcome Back</h1>
+        <p class="text-sm t-muted mt-1">Sign in to continue your wellness journey</p>
+    </div>
 
-    <form method="POST" action="{{ route('login') }}">
+    <x-auth-session-status class="mb-4 text-sm p-3 rounded-xl text-teal-700 bg-teal-50" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <label for="email" class="block text-sm font-medium t-text mb-1.5">Email Address</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                   class="input-nature">
+            <x-input-error :messages="$errors->get('email')" class="mt-1.5 text-sm text-red-500" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <label for="password" class="block text-sm font-medium t-text mb-1.5">Password</label>
+            <input id="password" type="password" name="password" required autocomplete="current-password"
+                   class="input-nature">
+            <x-input-error :messages="$errors->get('password')" class="mt-1.5 text-sm text-red-500" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+        <div class="flex items-center justify-between">
+            <label for="remember_me" class="inline-flex items-center cursor-pointer">
+                <input id="remember_me" type="checkbox" name="remember"
+                       class="w-4 h-4 rounded border-2 focus:ring-2 transition-colors"
+                       style="border-color:var(--th-border-strong); color:var(--th-primary); --tw-ring-color:var(--th-primary-light)">
+                <span class="ms-2 text-sm t-muted">Remember me</span>
             </label>
-        </div>
 
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a class="text-sm font-medium hover:underline" style="color:var(--th-primary)" href="{{ route('password.request') }}">
+                    Forgot password?
                 </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
+
+        <button type="submit" class="btn-nature w-full !py-3 text-base">
+            Sign In
+        </button>
     </form>
+
+    <div class="mt-6 text-center">
+        <p class="text-sm t-muted">
+            Don't have an account?
+            <a href="{{ route('register') }}" class="font-semibold hover:underline" style="color:var(--th-primary)">Create one</a>
+        </p>
+    </div>
 </x-guest-layout>

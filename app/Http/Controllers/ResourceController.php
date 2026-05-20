@@ -30,19 +30,19 @@ class ResourceController extends Controller
         $resources = $query->orderBy('created_at', 'desc')->paginate(12);
 
         $categories = [
-            'anxiety' => '😰 Anxiety Management',
-            'depression' => '💙 Depression Support',
-            'meditation' => '🧘 Meditation & Mindfulness',
-            'sleep' => '🌙 Sleep Hygiene',
-            'stress' => '📚 Stress Management',
-            'burnout' => '🔥 Burnout Prevention',
-            'relationships' => '💛 Relationships',
+            'anxiety' => 'Anxiety Management',
+            'depression' => 'Depression Support',
+            'meditation' => 'Meditation & Mindfulness',
+            'sleep' => 'Sleep Hygiene',
+            'stress' => 'Stress Management',
+            'burnout' => 'Burnout Prevention',
+            'relationships' => 'Relationships',
         ];
 
         $contentTypes = [
-            'article' => '📄 Articles',
-            'exercise' => '🏃 Exercises',
-            'breathing' => '🌬️ Guided Breathing',
+            'article' => 'Articles',
+            'exercise' => 'Exercises',
+            'breathing' => 'Guided Breathing',
         ];
 
         return view('resources.index', compact('resources', 'categories', 'contentTypes'));

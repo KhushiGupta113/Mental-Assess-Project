@@ -64,16 +64,23 @@ class DashboardController extends Controller
         // AI insights based on real data
         $insights = $this->generateInsights($user, $recentMoods, $recentResults);
 
-        // Calculate Averages
-        $avgMood = MoodLog::where('user_id', $user->id)
+        // Calculate Averages (manual PHP to handle MongoDB type issues)
+        $recentMoodLogs = MoodLog::where('user_id', $user->id)
             ->where('created_at', '>=', Carbon::now()->subDays(7))
-            ->get()
-            ->avg(fn($m) => $m->mood_score ?? $this->emojiToScore($m->mood_emoji));
-            
-        $avgSleep = MoodLog::where('user_id', $user->id)
-            ->where('created_at', '>=', Carbon::now()->subDays(7))
-            ->whereNotNull('sleep_hours')
-            ->avg('sleep_hours');
+            ->get();
+
+        $avgMood = $recentMoodLogs->count() > 0
+            ? round($recentMoodLogs->avg(fn($m) => $m->mood_score ?? $this->emojiToScore($m->mood_emoji)), 1)
+            : 0;
+
+        $sleepValues = $recentMoodLogs
+            ->filter(fn($m) => $m->sleep_hours !== null && $m->sleep_hours > 0)
+            ->pluck('sleep_hours')
+            ->map(fn($v) => (float) $v);
+
+        $avgSleep = $sleepValues->count() > 0
+            ? round($sleepValues->avg(), 1)
+            : 0;
 
         // Stats
         $stats = [
@@ -81,8 +88,8 @@ class DashboardController extends Controller
             'total_moods' => MoodLog::where('user_id', $user->id)->count(),
             'total_journals' => JournalEntry::where('user_id', $user->id)->count(),
             'streak' => $streak,
-            'avg_mood' => round($avgMood ?? 0, 1),
-            'avg_sleep' => round($avgSleep ?? 0, 1),
+            'avg_mood' => $avgMood,
+            'avg_sleep' => $avgSleep,
         ];
 
         // Today's mood
@@ -151,13 +158,13 @@ class DashboardController extends Controller
 
             if ($avgScore < 3) {
                 $insights[] = [
-                    'icon' => '💙',
+                    'icon' => 'care',
                     'text' => 'Your mood has been lower than usual this week. Remember to be gentle with yourself.',
                     'type' => 'care',
                 ];
             } elseif ($avgScore >= 4) {
                 $insights[] = [
-                    'icon' => '🌟',
+                    'icon' => 'positive',
                     'text' => 'Your mood has been positive this week! Keep up the great self-care.',
                     'type' => 'positive',
                 ];
@@ -166,7 +173,7 @@ class DashboardController extends Controller
             $avgSleep = $moods->whereNotNull('sleep_hours')->avg('sleep_hours');
             if ($avgSleep && $avgSleep < 6) {
                 $insights[] = [
-                    'icon' => '🌙',
+                    'icon' => 'sleep',
                     'text' => 'Your average sleep is below 6 hours. Better sleep can significantly improve your mood.',
                     'type' => 'suggestion',
                 ];
@@ -177,7 +184,7 @@ class DashboardController extends Controller
             $latestResult = $results->first();
             if ($latestResult && $latestResult->total_score > 14) {
                 $insights[] = [
-                    'icon' => '🤝',
+                    'icon' => 'support',
                     'text' => 'Based on your recent assessment, consider reaching out to a counselor or trusted friend.',
                     'type' => 'care',
                 ];
@@ -186,9 +193,9 @@ class DashboardController extends Controller
 
         if (empty($insights)) {
             $insights = [
-                ['icon' => '🌱', 'text' => 'Start tracking your mood daily to get personalized insights.', 'type' => 'suggestion'],
-                ['icon' => '📝', 'text' => 'Try writing a short journal entry to reflect on your day.', 'type' => 'suggestion'],
-                ['icon' => '🧘', 'text' => 'A 5-minute breathing exercise can help reduce stress levels.', 'type' => 'suggestion'],
+                ['icon' => 'growth', 'text' => 'Start tracking your mood daily to get personalized insights.', 'type' => 'suggestion'],
+                ['icon' => 'journal', 'text' => 'Try writing a short journal entry to reflect on your day.', 'type' => 'suggestion'],
+                ['icon' => 'breathe', 'text' => 'A 5-minute breathing exercise can help reduce stress levels.', 'type' => 'suggestion'],
             ];
         }
 

@@ -30,6 +30,7 @@ class ProfileUpdateRequest extends FormRequest
             'occupation' => ['nullable', 'string', 'max:255'],
             'lifestyle_habits' => ['nullable', 'string', 'max:1000'],
             'sleep_tracking' => ['nullable', 'numeric', 'min:0', 'max:24'],
+            'avatar' => ['nullable', 'string', 'max:10'],
         ];
     }
 

@@ -30,6 +30,14 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Check if email already exists — redirect to login instead of showing error
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser) {
+            return redirect()->route('login')
+                ->withInput(['email' => $request->email])
+                ->with('status', 'An account with this email already exists. Please sign in.');
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -40,8 +48,9 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'onboarding_completed' => false,
         ]);
-
+        
         event(new Registered($user));
 
         Auth::login($user);

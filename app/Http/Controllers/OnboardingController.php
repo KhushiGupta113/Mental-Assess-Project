@@ -28,7 +28,7 @@ class OnboardingController extends Controller
             'occupation' => 'nullable|string|max:100',
             'concerns'   => 'required|array|min:1|max:5',
             'concerns.*' => 'string|in:anxiety,depression,stress,sleep,burnout,adhd,relationships,self_esteem,grief,loneliness,anger,trauma',
-            'avatar_emoji' => 'nullable|string|max:10',
+            'avatar' => 'nullable|string|max:10',
         ]);
 
         $user = Auth::user();
@@ -38,7 +38,7 @@ class OnboardingController extends Controller
             'country'    => $validated['country'],
             'occupation' => $validated['occupation'] ?? null,
             'concerns'   => $validated['concerns'],
-            'avatar_emoji' => $validated['avatar_emoji'] ?? '🌱',
+            'avatar' => $validated['avatar'] ?? '🌱',
             'onboarding_completed' => true,
         ]);
 

@@ -13,6 +13,23 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        {
+            pattern: /(bg|text|border|ring)-(sage|earth|cream|teal|indigo|purple|red|amber|emerald|blue|rose|orange|gray)-(50|100|200|300|400|500|600|700|800|900)/,
+            variants: ['hover', 'focus', 'dark', 'dark:hover'],
+        },
+        'dark:bg-sage-900/40', 'dark:bg-indigo-900/40', 'dark:bg-teal-900/40',
+        'dark:bg-purple-900/40', 'dark:bg-red-900/40', 'dark:bg-amber-900/40',
+        'dark:bg-emerald-900/40', 'dark:bg-blue-900/40', 'dark:bg-rose-900/40',
+        'dark:bg-orange-900/40', 'dark:bg-gray-900/40',
+        'bg-sage-100', 'bg-indigo-100', 'bg-teal-100', 'bg-purple-100', 
+        'bg-red-100', 'bg-amber-100', 'bg-emerald-100', 'bg-blue-100', 'bg-rose-100',
+        'bg-orange-100', 'bg-gray-100',
+        'text-sage-600', 'text-indigo-600', 'text-teal-600', 'text-purple-600', 
+        'text-red-600', 'text-amber-600', 'text-emerald-600', 'text-blue-600', 'text-rose-600',
+        'text-orange-600', 'text-gray-600',
+    ],
+
     theme: {
         extend: {
             fontFamily: {
