@@ -2,8 +2,6 @@
 
 **MindAssess** is a modern, deeply personalized mental health self-assessment and tracking platform. Built with a focus on privacy, aesthetics, and empathetic guidance, it helps users understand their mental well-being through clinically inspired screening tools, daily mood logs, and intelligent AI insights.
 
-![MindAssess Banner](https://via.placeholder.com/1200x400.png/f6f7f5/697a59?text=MindAssess+Wellness+Companion)
-
 > **⚠️ Disclaimer:** This platform is not a medical diagnostic tool. It is designed for educational purposes and self-reflection. If you or someone you know is in crisis, please seek professional help immediately.
 
 ---
@@ -92,7 +90,7 @@ MindAssess is built using a modern, robust, and scalable technology stack:
    DB_CONNECTION=mongodb
    DB_HOST=127.0.0.1
    DB_PORT=27017
-   DB_DATABASE=mindassess
+   DB_DATABASE=mental_assess_db
    ```
 
 6. **Compile Frontend Assets:**
