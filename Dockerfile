@@ -27,22 +27,33 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-# Copy project files
+# Copy project
 COPY . .
 
-# Install Composer dependencies
+# Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install frontend dependencies
+# Install node dependencies
 RUN npm install
 
-# Build Vite assets
+# Build frontend
 RUN npm run build
 
-# Cache Laravel config
-RUN php artisan config:cache || true
-RUN php artisan route:cache || true
-RUN php artisan view:cache || true
+# Create Laravel writable directories
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
+
+# Give permissions
+RUN chmod -R 775 storage bootstrap/cache
+
+# Clear caches
+RUN php artisan config:clear
+RUN php artisan cache:clear
+RUN php artisan route:clear
+RUN php artisan view:clear
 
 EXPOSE 10000
 
