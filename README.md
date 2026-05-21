@@ -90,7 +90,7 @@ MindAssess is built using a modern, robust, and scalable technology stack:
    DB_CONNECTION=mongodb
    DB_HOST=127.0.0.1
    DB_PORT=27017
-   DB_DATABASE=mindassess
+   DB_DATABASE=mental_assess_db
    ```
 
 6. **Compile Frontend Assets:**
