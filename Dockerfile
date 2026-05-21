@@ -5,8 +5,13 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     curl \
-    libzip-dev \
     zip \
+    libzip-dev \
+    libssl-dev \
+    pkg-config \
+    libcurl4-openssl-dev \
+    libsasl2-dev \
+    libzstd-dev \
     nodejs \
     npm
 
@@ -14,7 +19,8 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install zip
 
 # Install MongoDB extension
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+RUN pecl install mongodb \
+    && docker-php-ext-enable mongodb
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -24,13 +30,16 @@ WORKDIR /app
 # Copy project files
 COPY . .
 
-# Install dependencies
+# Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Install frontend dependencies
-RUN npm install && npm run build
+RUN npm install
 
-# Generate Laravel cache
+# Build Vite assets
+RUN npm run build
+
+# Cache Laravel config
 RUN php artisan config:cache || true
 RUN php artisan route:cache || true
 RUN php artisan view:cache || true
