@@ -2,10 +2,11 @@
 
 @section('content')
 {{-- ═══ Hero Section ═══ --}}
-<section class="relative overflow-hidden bg-hero-gradient pb-20 pt-32 lg:pt-40">
+<section class="relative overflow-hidden bg-hero-gradient pb-20 pt-32 lg:pt-40" style="z-index:1;">
     <div class="absolute inset-0 opacity-40 pointer-events-none overflow-hidden">
         <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-th-primary/20 blur-[100px]"></div>
         <div class="absolute top-1/2 -right-32 w-[30rem] h-[30rem] rounded-full bg-teal-400/20 blur-[120px]"></div>
+        <div class="absolute bottom-0 left-1/3 w-[25rem] h-[25rem] rounded-full bg-th-accent/15 blur-[100px]"></div>
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,19 +36,19 @@
             </div>
         </div>
 
-        {{-- Hero Visual (Bento-style preview) --}}
+        {{-- Hero Visual (Bento-style preview) — Glassmorphism --}}
         <div class="mt-20 relative mx-auto w-full max-w-5xl" data-aos="fade-up" data-aos-delay="200">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Mood Card -->
-                <div class="bg-white/80 dark:bg-th-surface/80 backdrop-blur-xl rounded-[2rem] p-6 shadow-2xl border border-white/50 dark:border-white/10 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500 ease-out z-10 relative">
+                <div class="glass-card-premium p-6 transform rotate-[-2deg] hover:rotate-0 transition-all duration-500 ease-out z-10 relative">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="font-serif font-bold text-xl t-text">How are you?</h3>
-                        <span class="bg-teal-100 text-teal-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Today</span>
+                        <span class="bg-teal-100/80 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">Today</span>
                     </div>
                     <div class="flex justify-between items-center gap-2">
                         @foreach(['angry','sad','neutral','happy','very_happy'] as $i => $mood)
                             <div class="relative group">
-                                <div class="w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer {{ $i === 3 ? 'bg-teal-50 ring-2 ring-teal-400 scale-110 shadow-md' : 'bg-th-surface-alt hover:scale-110' }}">
+                                <div class="w-12 h-12 rounded-full flex items-center justify-center transition-all cursor-pointer {{ $i === 3 ? 'bg-teal-50 ring-2 ring-teal-400 scale-110 shadow-md' : 'bg-white/40 dark:bg-white/10 hover:scale-110' }}">
                                     <x-mood-icon :score="$i+1" class="w-8 h-8 {{ $i === 3 ? '' : 'opacity-70 group-hover:opacity-100' }}" />
                                 </div>
                             </div>
@@ -61,22 +62,25 @@
                 <!-- Welcome/Stats Card -->
                 <div class="bg-gradient-to-br from-th-primary to-teal-500 rounded-[2rem] p-8 shadow-2xl shadow-th-primary/30 z-20 relative md:-mt-8 md:col-span-1 transform hover:scale-[1.02] transition-transform duration-500 flex flex-col justify-center items-center text-center overflow-hidden">
                     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] opacity-50"></div>
-                    <div class="w-16 h-16 rounded-full bg-white/20 mb-4 flex items-center justify-center text-white backdrop-blur-md shadow-inner border border-white/30 text-3xl">
-                        🍃
-                    </div>
-                    <h3 class="font-serif font-bold text-2xl text-white mb-2">Welcome Back</h3>
-                    <div class="bg-white/20 rounded-full px-4 py-1.5 backdrop-blur-md border border-white/20 inline-flex items-center">
-                        <span class="text-white font-bold mr-1">12</span>
-                        <span class="text-white/90 text-sm font-medium">Day Streak</span>
-                        <span class="ml-1.5 text-orange-300">🔥</span>
+                    <div class="absolute inset-0 backdrop-blur-[1px]"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-16 h-16 rounded-full bg-white/20 mb-4 flex items-center justify-center text-white backdrop-blur-md shadow-inner border border-white/30 text-3xl">
+                            🍃
+                        </div>
+                        <h3 class="font-serif font-bold text-2xl text-white mb-2">Welcome Back</h3>
+                        <div class="bg-white/20 rounded-full px-4 py-1.5 backdrop-blur-md border border-white/20 inline-flex items-center">
+                            <span class="text-white font-bold mr-1">12</span>
+                            <span class="text-white/90 text-sm font-medium">Day Streak</span>
+                            <span class="ml-1.5 text-orange-300">🔥</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Journal Card -->
-                <div class="bg-white/80 dark:bg-th-surface/80 backdrop-blur-xl rounded-[2rem] p-6 shadow-2xl border border-white/50 dark:border-white/10 transform rotate-[2deg] hover:rotate-0 transition-transform duration-500 ease-out z-10 relative">
+                <div class="glass-card-premium p-6 transform rotate-[2deg] hover:rotate-0 transition-all duration-500 ease-out z-10 relative">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="font-serif font-bold text-lg t-text">Journal</h3>
-                        <span class="text-[10px] font-bold t-muted bg-th-surface-alt px-2 py-1 rounded-md border border-th-border flex items-center">
+                        <span class="text-[10px] font-bold t-muted bg-white/40 dark:bg-white/10 px-2 py-1 rounded-md border border-white/30 dark:border-white/10 flex items-center backdrop-blur-sm">
                             <svg class="w-3 h-3 mr-1 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             Saved
                         </span>
@@ -84,8 +88,8 @@
                     <div class="space-y-2">
                         <p class="text-sm t-text font-medium leading-relaxed italic">"Today was surprisingly calm. I took a long walk in the park and finally felt that heavy weight lift off my shoulders..."</p>
                         <div class="flex gap-2 mt-3">
-                            <span class="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded-md">Peaceful</span>
-                            <span class="text-[10px] uppercase font-bold text-orange-500 bg-orange-50 dark:bg-orange-900/30 px-2 py-1 rounded-md">Nature</span>
+                            <span class="text-[10px] uppercase font-bold text-indigo-500 bg-indigo-50/80 dark:bg-indigo-900/30 px-2 py-1 rounded-md backdrop-blur-sm">Peaceful</span>
+                            <span class="text-[10px] uppercase font-bold text-orange-500 bg-orange-50/80 dark:bg-orange-900/30 px-2 py-1 rounded-md backdrop-blur-sm">Nature</span>
                         </div>
                     </div>
                 </div>
@@ -95,7 +99,7 @@
 </section>
 
 {{-- ═══ Horizontal Scrolling Marquee / Badges ═══ --}}
-<div class="py-6 bg-th-primary text-th-primary-lighter overflow-hidden whitespace-nowrap border-y border-th-border-strong relative">
+<div class="py-6 bg-th-primary text-th-primary-lighter overflow-hidden whitespace-nowrap border-y border-th-border-strong relative" style="z-index:1;">
     <div class="animate-marquee inline-flex items-center text-xl md:text-2xl font-serif font-bold uppercase tracking-wider">
         @php
             $marqueeItems = [
@@ -129,8 +133,8 @@
 }
 </style>
 
-{{-- ═══ Features Grid (Bento Style) ═══ --}}
-<section id="how-it-works" class="py-32" style="background:var(--th-card-bg)">
+{{-- ═══ Features Grid (Bento Style) — Glassmorphism ═══ --}}
+<section id="how-it-works" class="py-32 relative" style="background:var(--th-card-bg); z-index:1;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-20" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-serif font-bold t-text mb-6">Everything you need, <br>in one peaceful space.</h2>
@@ -139,11 +143,11 @@
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[280px]">
             <!-- Assessment Bento -->
-            <div class="md:col-span-2 md:row-span-2 t-surface rounded-[2rem] p-10 border border-th-border shadow-lg relative overflow-hidden group" data-aos="fade-up">
+            <div class="md:col-span-2 md:row-span-2 glass-card-premium p-10 relative overflow-hidden group" data-aos="fade-up">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 z-0 transition-opacity opacity-0 group-hover:opacity-100 duration-500"></div>
                 <div class="relative z-10 h-full flex flex-col justify-between">
                     <div>
-                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50/80 dark:bg-indigo-900/30 flex items-center justify-center mb-6 backdrop-blur-sm">
                             <svg class="w-7 h-7 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                         </div>
                         <h3 class="text-3xl font-serif font-bold t-text mb-4">Self-Assessments</h3>
@@ -151,17 +155,17 @@
                     </div>
                     <div class="flex gap-4 mt-8 overflow-hidden">
                         <!-- Mock Assessment Pills -->
-                        <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-th-border text-sm font-semibold whitespace-nowrap">PHQ-9 (Depression)</span>
-                        <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 shadow-sm border border-th-border text-sm font-semibold whitespace-nowrap">GAD-7 (Anxiety)</span>
+                        <span class="px-4 py-2 rounded-full bg-white/60 dark:bg-white/10 shadow-sm border border-white/40 dark:border-white/10 text-sm font-semibold whitespace-nowrap backdrop-blur-sm">PHQ-9 (Depression)</span>
+                        <span class="px-4 py-2 rounded-full bg-white/60 dark:bg-white/10 shadow-sm border border-white/40 dark:border-white/10 text-sm font-semibold whitespace-nowrap backdrop-blur-sm">GAD-7 (Anxiety)</span>
                     </div>
                 </div>
             </div>
 
             <!-- Mood Tracking Bento -->
-            <div class="md:col-span-2 t-surface rounded-[2rem] p-8 border border-th-border shadow-lg relative overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+            <div class="md:col-span-2 glass-card-premium p-8 relative overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
                 <div class="relative z-10 flex items-center justify-between h-full">
                     <div class="max-w-[60%]">
-                        <div class="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-teal-50/80 dark:bg-teal-900/30 flex items-center justify-center mb-4 backdrop-blur-sm">
                             <svg class="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                         </div>
                         <h3 class="text-2xl font-serif font-bold t-text mb-2">Mood Trends</h3>
@@ -178,8 +182,8 @@
             </div>
 
             <!-- Smart Journal Bento -->
-            <div class="t-surface rounded-[2rem] p-8 border border-th-border shadow-lg relative group" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
+            <div class="glass-card-premium p-8 relative group" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50/80 dark:bg-emerald-900/30 flex items-center justify-center mb-4 backdrop-blur-sm">
                     <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </div>
                 <h3 class="text-xl font-serif font-bold t-text mb-2">Smart Journal</h3>
@@ -187,8 +191,8 @@
             </div>
 
             <!-- Resource Library Bento -->
-            <div class="t-surface rounded-[2rem] p-8 border border-th-border shadow-lg relative group" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center mb-4">
+            <div class="glass-card-premium p-8 relative group" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-12 h-12 rounded-xl bg-purple-50/80 dark:bg-purple-900/30 flex items-center justify-center mb-4 backdrop-blur-sm">
                     <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 </div>
                 <h3 class="text-xl font-serif font-bold t-text mb-2">Library</h3>
@@ -199,7 +203,7 @@
 </section>
 
 {{-- ═══ Assessments Preview Section ═══ --}}
-<section class="py-24 bg-nature-gradient border-y border-th-border-strong relative">
+<section class="py-24 bg-nature-gradient border-y border-th-border-strong relative" style="z-index:1;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16" data-aos="fade-up">
             <div class="max-w-2xl">
@@ -215,9 +219,9 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($assessments->take(8) as $i => $assessment)
-            <a href="{{ route('assessments.show', $assessment) }}" class="assessment-card" data-aos="fade-up" data-aos-delay="{{ $i * 50 }}">
+            <a href="{{ route('assessments.show', $assessment) }}" class="assessment-card-glass group" data-aos="fade-up" data-aos-delay="{{ $i * 50 }}">
                 <div class="p-6 h-full flex flex-col">
-                    <div class="card-icon bg-{{ $assessment->color ?? 'sage' }}-100 dark:bg-{{ $assessment->color ?? 'sage' }}-900/30 text-{{ $assessment->color ?? 'sage' }}-600 mb-5 flex items-center justify-center">
+                    <div class="card-icon bg-{{ $assessment->color ?? 'sage' }}-100/80 dark:bg-{{ $assessment->color ?? 'sage' }}-900/30 text-{{ $assessment->color ?? 'sage' }}-600 mb-5 flex items-center justify-center backdrop-blur-sm">
                         @if($assessment->type === 'phq9')
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21v-2m-4 2v-2m8 2v-2"/></svg>
                         @elseif($assessment->type === 'gad7')
@@ -238,7 +242,7 @@
                     </div>
                     <h3 class="font-serif font-bold text-lg t-text mb-2">{{ $assessment->title }}</h3>
                     <p class="t-muted text-sm mb-4 line-clamp-2 flex-grow">{{ $assessment->description }}</p>
-                    <div class="flex items-center justify-between pt-4 border-t border-th-border-strong">
+                    <div class="flex items-center justify-between pt-4 border-t border-white/20 dark:border-white/5">
                         <span class="text-xs font-medium t-light uppercase tracking-wider">{{ $assessment->estimated_minutes ?? 5 }} min</span>
                         <span class="t-light group-hover:t-primary transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
@@ -252,14 +256,14 @@
 </section>
 
 {{-- ═══ Call to Action ═══ --}}
-<section class="py-32 relative overflow-hidden text-center bg-th-primary">
+<section class="py-32 relative overflow-hidden text-center bg-th-primary" style="z-index:1;">
     <div class="absolute inset-0 opacity-20 pointer-events-none">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-white/20 blur-[100px] animate-breathe"></div>
     </div>
     <div class="relative max-w-3xl mx-auto px-4 z-10" data-aos="zoom-in">
         <h2 class="text-4xl md:text-6xl font-serif font-bold text-white mb-6">Begin your wellness journey.</h2>
         <p class="text-xl text-white/80 mb-10 max-w-xl mx-auto">Join a supportive space designed to help you thrive. Start tracking, reflecting, and growing today.</p>
-        <a href="{{ route('register') }}" class="inline-block bg-white text-emerald-700 font-bold text-lg px-10 py-5 rounded-full shadow-2xl hover:scale-105 hover:shadow-white/20 transition-all duration-300">
+        <a href="{{ route('register') }}" class="cta-glow-btn inline-block bg-white text-emerald-700 font-bold text-lg px-10 py-5 rounded-full shadow-2xl hover:scale-105 hover:shadow-white/20 transition-all duration-300">
             Create Free Account
         </a>
     </div>

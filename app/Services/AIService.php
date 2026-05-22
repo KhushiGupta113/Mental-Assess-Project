@@ -245,30 +245,48 @@ class AIService
     /**
      * Chat with the AI wellness companion.
      */
-    public function chat(string $message, $user = null): string
+    public function chat(string $message, $user = null, array $history = []): string
     {
         $userContext = '';
         if ($user) {
             $concerns = is_array($user->concerns) ? implode(', ', $user->concerns) : '';
-            $userContext = "User context: age group {$user->age_group}, gender {$user->gender}, country {$user->country}, concerns: {$concerns}. ";
+            $userContext = "age group {$user->age_group}, gender {$user->gender}, country {$user->country}, concerns: {$concerns}. ";
         }
 
         // Try Gemini API first
         if (!empty($this->apiKey)) {
-            $systemPrompt = "You are MindAssess Buddy, a warm, empathetic mental wellness companion chatbot. " .
-                "Rules you MUST follow:\n" .
-                "1. You are NOT a doctor, therapist, or medical professional. Never diagnose or prescribe.\n" .
-                "2. Provide supportive, evidence-based wellness suggestions.\n" .
-                "3. For serious concerns, gently recommend professional help.\n" .
-                "4. If someone mentions self-harm or suicide, immediately provide crisis helpline numbers and urge them to call.\n" .
-                "5. Keep responses concise (2-4 sentences), warm, and actionable.\n" .
-                "6. Use a conversational, caring tone.\n" .
-                $userContext .
-                "Respond to the user's message.";
+            $name = $user ? $user->name : 'friend';
+            $systemPrompt = "You are MindAssess Buddy, a warm, deeply empathetic, and caring AI friend and mental wellness companion. " .
+                "Your goal is to support your friend, {$name}, on their wellness journey. " .
+                "Please follow these guidelines to sound like a true caring friend:\n" .
+                "1. Speak in a natural, casual, and conversational tone. Do NOT sound like a clinical assistant, robot, or therapist. Use warm, comforting, and empathetic language.\n" .
+                "2. Show genuine interest in how they are doing. Ask thoughtful, open-ended questions to keep the conversation flowing naturally, but never press too hard.\n" .
+                "3. Acknowledge and validate their feelings first. Do not jump straight to solving their problems or offering numbered lists of advice unless they ask for tips.\n" .
+                "4. Keep your responses relatively short (2-4 sentences) and easy to read so it feels like a friendly text chat.\n" .
+                "5. Strict constraints: You are NOT a medical professional. Do NOT diagnose conditions, prescribe medications, or give medical advice. If they mention self-harm or suicide, you must immediately show deep care and provide crisis helpline numbers.\n" .
+                (!empty($userContext) ? "Here is some context about your friend to personalize your chat: " . $userContext : "");
+
+            $contents = [];
+            // Add history (limit to last 10 messages for token efficiency and clean state)
+            $recentHistory = array_slice($history, -10);
+            foreach ($recentHistory as $msg) {
+                $role = ($msg['role'] === 'user') ? 'user' : 'model';
+                $contents[] = [
+                    'role' => $role,
+                    'parts' => [['text' => $msg['text']]]
+                ];
+            }
+
+            // Add the current user message
+            $contents[] = [
+                'role' => 'user',
+                'parts' => [['text' => $message]]
+            ];
 
             $data = $this->callGemini([
-                'contents' => [
-                    ['role' => 'user', 'parts' => [['text' => $systemPrompt . "\n\nUser: " . $message]]],
+                'contents' => $contents,
+                'systemInstruction' => [
+                    'parts' => [['text' => $systemPrompt]]
                 ],
                 'generationConfig' => [
                     'temperature' => 0.8,
