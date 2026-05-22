@@ -2,13 +2,64 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 class AIService
 {
     protected string $apiKey;
 
+    /**
+     * Models to try in order. If the first model's quota is exhausted (429),
+     * the next model is attempted automatically.
+     */
+    protected array $models = [
+        'gemini-2.5-flash',
+        'gemini-2.5-flash-lite',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-lite',
+    ];
+
     public function __construct()
     {
         $this->apiKey = config('services.gemini.key', env('AI_API_KEY', ''));
+    }
+
+    /**
+     * Centralized Gemini API caller with automatic model fallback.
+     * Tries each model in $this->models; on 429 (quota exhausted), moves to next.
+     */
+    private function callGemini(array $payload, int $timeout = 12): ?array
+    {
+        foreach ($this->models as $model) {
+            try {
+                $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent?key=' . $this->apiKey;
+
+                $response = Http::timeout($timeout)
+                    ->withHeaders(['Content-Type' => 'application/json'])
+                    ->post($url, $payload);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+
+                // On quota exhaustion, try the next model
+                if ($response->status() === 429) {
+                    Log::info("Gemini model {$model} quota exhausted, trying next model...");
+                    continue;
+                }
+
+                // Other errors — log and stop trying
+                Log::warning("Gemini API failed on {$model}", ['status' => $response->status(), 'body' => $response->body()]);
+                return null;
+            } catch (\Exception $e) {
+                Log::warning("Gemini API exception on {$model}", ['error' => $e->getMessage()]);
+                return null;
+            }
+        }
+
+        Log::warning('All Gemini models exhausted (quota exceeded on all).');
+        return null;
     }
 
     /**
@@ -31,39 +82,31 @@ class AIService
      */
     private function callGeminiAPI(string $type, int $score, string $severity, ?string $interpretation): ?array
     {
-        try {
-            $prompt = "You are a supportive mental wellness companion (NOT a doctor or therapist). A user just completed a {$type} self-assessment and scored {$score} (severity: {$severity}). " .
-                ($interpretation ? "Interpretation: {$interpretation}. " : "") .
-                "Generate exactly 5 personalized, actionable wellness tips. Each tip should have a short title (3-5 words) and a brief description (1-2 sentences). " .
-                "Be warm, encouraging, and non-clinical. Never diagnose or prescribe medication. " .
-                "Return as JSON array: [{\"title\": \"...\", \"description\": \"...\", \"icon\": \"emoji\"}]";
+        $prompt = "You are a supportive mental wellness companion (NOT a doctor or therapist). A user just completed a {$type} self-assessment and scored {$score} (severity: {$severity}). " .
+            ($interpretation ? "Interpretation: {$interpretation}. " : "") .
+            "Generate exactly 5 personalized, actionable wellness tips. Each tip should have a short title (3-5 words) and a brief description (1-2 sentences). " .
+            "Be warm, encouraging, and non-clinical. Never diagnose or prescribe medication. " .
+            "Return as JSON array: [{\"title\": \"...\", \"description\": \"...\", \"icon\": \"emoji\"}]";
 
-            $response = @file_get_contents('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $this->apiKey, false, stream_context_create([
-                'http' => [
-                    'method' => 'POST',
-                    'header' => "Content-Type: application/json\r\n",
-                    'content' => json_encode([
-                        'contents' => [['parts' => [['text' => $prompt]]]],
-                        'generationConfig' => ['temperature' => 0.7, 'maxOutputTokens' => 1024],
-                    ]),
-                    'timeout' => 15,
-                ],
-            ]));
+        $data = $this->callGemini([
+            'contents' => [['parts' => [['text' => $prompt]]]],
+            'generationConfig' => [
+                'temperature' => 0.7,
+                'maxOutputTokens' => 2048,
+                'thinkingConfig' => ['thinkingBudget' => 0],
+            ],
+        ], 15);
 
-            if ($response) {
-                $data = json_decode($response, true);
-                $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        if ($data) {
+            $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
 
-                // Extract JSON from response
-                if (preg_match('/\[.*\]/s', $text, $matches)) {
-                    $tips = json_decode($matches[0], true);
-                    if (is_array($tips) && count($tips) > 0) {
-                        return $tips;
-                    }
+            // Extract JSON from response
+            if (preg_match('/\[.*\]/s', $text, $matches)) {
+                $tips = json_decode($matches[0], true);
+                if (is_array($tips) && count($tips) > 0) {
+                    return $tips;
                 }
             }
-        } catch (\Exception $e) {
-            // Silently fall back to built-in tips
         }
 
         return null;
@@ -178,29 +221,21 @@ class AIService
     public function generateWellnessSummary(array $context): string
     {
         if (!empty($this->apiKey)) {
-            try {
-                $prompt = "You are a warm, supportive wellness companion. Based on this user data, write a brief 2-3 sentence personalized insight. " .
-                    "Data: " . json_encode($context) . ". " .
-                    "Be encouraging and actionable. Never diagnose. Speak directly to the user with 'you'.";
+            $prompt = "You are a warm, supportive wellness companion. Based on this user data, write a brief 2-3 sentence personalized insight. " .
+                "Data: " . json_encode($context) . ". " .
+                "Be encouraging and actionable. Never diagnose. Speak directly to the user with 'you'.";
 
-                $response = @file_get_contents('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $this->apiKey, false, stream_context_create([
-                    'http' => [
-                        'method' => 'POST',
-                        'header' => "Content-Type: application/json\r\n",
-                        'content' => json_encode([
-                            'contents' => [['parts' => [['text' => $prompt]]]],
-                            'generationConfig' => ['temperature' => 0.7, 'maxOutputTokens' => 256],
-                        ]),
-                        'timeout' => 10,
-                    ],
-                ]));
+            $data = $this->callGemini([
+                'contents' => [['parts' => [['text' => $prompt]]]],
+                'generationConfig' => [
+                    'temperature' => 0.7,
+                    'maxOutputTokens' => 512,
+                    'thinkingConfig' => ['thinkingBudget' => 0],
+                ],
+            ], 10);
 
-                if ($response) {
-                    $data = json_decode($response, true);
-                    return $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-                }
-            } catch (\Exception $e) {
-                // Fall through
+            if ($data) {
+                return $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
             }
         }
 
@@ -220,43 +255,35 @@ class AIService
 
         // Try Gemini API first
         if (!empty($this->apiKey)) {
-            try {
-                $systemPrompt = "You are MindAssess Buddy, a warm, empathetic mental wellness companion chatbot. " .
-                    "Rules you MUST follow:\n" .
-                    "1. You are NOT a doctor, therapist, or medical professional. Never diagnose or prescribe.\n" .
-                    "2. Provide supportive, evidence-based wellness suggestions.\n" .
-                    "3. For serious concerns, gently recommend professional help.\n" .
-                    "4. If someone mentions self-harm or suicide, immediately provide crisis helpline numbers and urge them to call.\n" .
-                    "5. Keep responses concise (2-4 sentences), warm, and actionable.\n" .
-                    "6. Use a conversational, caring tone.\n" .
-                    $userContext .
-                    "Respond to the user's message.";
+            $systemPrompt = "You are MindAssess Buddy, a warm, empathetic mental wellness companion chatbot. " .
+                "Rules you MUST follow:\n" .
+                "1. You are NOT a doctor, therapist, or medical professional. Never diagnose or prescribe.\n" .
+                "2. Provide supportive, evidence-based wellness suggestions.\n" .
+                "3. For serious concerns, gently recommend professional help.\n" .
+                "4. If someone mentions self-harm or suicide, immediately provide crisis helpline numbers and urge them to call.\n" .
+                "5. Keep responses concise (2-4 sentences), warm, and actionable.\n" .
+                "6. Use a conversational, caring tone.\n" .
+                $userContext .
+                "Respond to the user's message.";
 
-                $response = @file_get_contents('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . $this->apiKey, false, stream_context_create([
-                    'http' => [
-                        'method' => 'POST',
-                        'header' => "Content-Type: application/json\r\n",
-                        'content' => json_encode([
-                            'contents' => [
-                                ['role' => 'user', 'parts' => [['text' => $systemPrompt . "\n\nUser: " . $message]]],
-                            ],
-                            'generationConfig' => ['temperature' => 0.8, 'maxOutputTokens' => 300],
-                            'safetySettings' => [
-                                ['category' => 'HARM_CATEGORY_HARASSMENT', 'threshold' => 'BLOCK_NONE'],
-                                ['category' => 'HARM_CATEGORY_DANGEROUS_CONTENT', 'threshold' => 'BLOCK_NONE'],
-                            ],
-                        ]),
-                        'timeout' => 12,
-                    ],
-                ]));
+            $data = $this->callGemini([
+                'contents' => [
+                    ['role' => 'user', 'parts' => [['text' => $systemPrompt . "\n\nUser: " . $message]]],
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.8,
+                    'maxOutputTokens' => 1024,
+                    'thinkingConfig' => ['thinkingBudget' => 0],
+                ],
+                'safetySettings' => [
+                    ['category' => 'HARM_CATEGORY_HARASSMENT', 'threshold' => 'BLOCK_NONE'],
+                    ['category' => 'HARM_CATEGORY_DANGEROUS_CONTENT', 'threshold' => 'BLOCK_NONE'],
+                ],
+            ], 15);
 
-                if ($response) {
-                    $data = json_decode($response, true);
-                    $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-                    if (!empty($text)) return trim($text);
-                }
-            } catch (\Exception $e) {
-                // Fall through to built-in responses
+            if ($data) {
+                $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+                if (!empty($text)) return trim($text);
             }
         }
 
