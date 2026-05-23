@@ -143,7 +143,7 @@
         </main>
 
         {{-- ═══ Footer ═══ --}}
-        <footer class="mt-auto" style="background:var(--th-footer-bg);color:var(--th-footer-text);">
+        <footer class="mt-auto relative z-20" style="background:var(--th-footer-bg);color:var(--th-footer-text);">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div class="md:col-span-2">
@@ -368,6 +368,76 @@
                     body: JSON.stringify({ preferences: { theme: theme } })
                 }).catch(e => console.log('Theme sync error', e));
                 @endauth
+            }
+        </script>
+
+        {{-- ═══ Dynamic Custom Cursor ═══ --}}
+        <div id="custom-cursor-dot" class="fixed top-0 left-0 pointer-events-none z-[100000] rounded-full transition-transform duration-100 ease-out shadow-sm" style="width: 8px; height: 8px; background: var(--th-primary); display: none;"></div>
+        <div id="custom-cursor-ring" class="fixed top-0 left-0 pointer-events-none z-[99999] rounded-full transition-all duration-300 ease-out border-2" style="width: 40px; height: 40px; border-color: var(--th-accent); opacity: 1; display: none;"></div>
+
+        <style>
+            /* Hide default cursor universally */
+            *, *::before, *::after {
+                cursor: none !important;
+            }
+            /* Exception for touch devices where custom cursor isn't useful */
+            @media (pointer: coarse) {
+                *, *::before, *::after {
+                    cursor: auto !important;
+                }
+                .cursor-pointer, a, button {
+                    cursor: pointer !important;
+                }
+            }
+        </style>
+
+        <script>
+            // Only initialize custom cursor on devices with a fine pointer (mouse)
+            if (window.matchMedia("(pointer: fine)").matches) {
+                const dot = document.getElementById('custom-cursor-dot');
+                const ring = document.getElementById('custom-cursor-ring');
+                
+                dot.style.display = 'block';
+                ring.style.display = 'block';
+
+                let mouseX = window.innerWidth / 2;
+                let mouseY = window.innerHeight / 2;
+                let ringX = mouseX;
+                let ringY = mouseY;
+                let dotScale = 1;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    dot.style.transform = `translate3d(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%), 0) scale(${dotScale})`;
+                });
+
+                document.addEventListener('mouseover', (e) => {
+                    const target = e.target.closest('a, button, input, textarea, select, .cursor-pointer, [role="button"]');
+                    if (target) {
+                        ring.style.width = '60px';
+                        ring.style.height = '60px';
+                        ring.style.backgroundColor = 'var(--th-primary-light)';
+                        ring.style.opacity = '0.8';
+                        dotScale = 1.5;
+                        dot.style.transform = `translate3d(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%), 0) scale(${dotScale})`;
+                    } else {
+                        ring.style.width = '40px';
+                        ring.style.height = '40px';
+                        ring.style.backgroundColor = 'transparent';
+                        ring.style.opacity = '1';
+                        dotScale = 1;
+                        dot.style.transform = `translate3d(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%), 0) scale(${dotScale})`;
+                    }
+                });
+
+                function animateCursor() {
+                    ringX += (mouseX - ringX) * 0.2;
+                    ringY += (mouseY - ringY) * 0.2;
+                    ring.style.transform = `translate3d(calc(${ringX}px - 50%), calc(${ringY}px - 50%), 0)`;
+                    requestAnimationFrame(animateCursor);
+                }
+                animateCursor();
             }
         </script>
     </body>
