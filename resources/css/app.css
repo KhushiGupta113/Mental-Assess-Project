@@ -794,19 +794,19 @@
 
 /* Custom cursor overrides mapped to color theme */
 [data-color-theme="sage"] body {
-    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%23697a59'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%23697a59' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI0IiBmaWxsPSIjNjk3YTU5Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTAiIHN0cm9rZT0iIzY5N2E1OSIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjExIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=") 16 16, auto;
 }
 [data-color-theme="lavender"] body {
-    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%237c6fae'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%237c6fae' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI0IiBmaWxsPSIjN2M2ZmFlIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTAiIHN0cm9rZT0iIzdjNmZhZSIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjExIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=") 16 16, auto;
 }
 [data-color-theme="rose"] body {
-    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%23c06c84'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%23c06c84' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI0IiBmaWxsPSIjYzA2Yzg0Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTAiIHN0cm9rZT0iI2MwNmM4NCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjExIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=") 16 16, auto;
 }
 [data-color-theme="ocean"] body {
-    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%234a90a4'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%234a90a4' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI0IiBmaWxsPSIjNGE5MGE0Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTAiIHN0cm9rZT0iIzRhOTBhNCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjExIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=") 16 16, auto;
 }
 [data-color-theme="peach"] body {
-    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%23be6542'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%23be6542' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+    cursor: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI0IiBmaWxsPSIjYmU2NTQyIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTAiIHN0cm9rZT0iI2JlNjU0MiIgc3Ryb2tlLXdpZHRoPSIxLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjExIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjgiLz48L3N2Zz4=") 16 16, auto;
 }
 
 /* Revert custom cursor to default pointer for interactive items */
