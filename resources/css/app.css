@@ -124,31 +124,31 @@
 
 /* Sunset Peach */
 [data-color-theme="peach"] {
-    --th-primary: #d98a6a;
+    --th-primary: #be6542;
     --th-primary-light: #fae5da;
     --th-primary-lighter: #fef5f0;
-    --th-primary-dark: #b96840;
+    --th-primary-dark: #8a4324;
     --th-accent: #e6b566;
     --th-accent-light: #fdf1d8;
     --th-surface: #ffffff;
     --th-surface-alt: #fef5f0;
     --th-bg: #fffcfa;
     --th-text: #3e2a1e;
-    --th-text-muted: #d98a6a;
-    --th-text-light: #e0b49e;
-    --th-border: rgba(217, 138, 106, 0.15);
-    --th-border-strong: rgba(217, 138, 106, 0.3);
+    --th-text-muted: #be6542;
+    --th-text-light: #a3725b;
+    --th-border: rgba(190, 101, 66, 0.15);
+    --th-border-strong: rgba(190, 101, 66, 0.3);
     --th-gradient-from: #fae5da;
     --th-gradient-via: #fdf1d8;
     --th-gradient-to: #fef5f0;
-    --th-glow: rgba(217, 138, 106, 0.12);
-    --th-chart-1: #d98a6a;
+    --th-glow: rgba(190, 101, 66, 0.12);
+    --th-chart-1: #be6542;
     --th-chart-2: #e6b566;
     --th-chart-3: #7eb5a6;
     --th-nav-bg: rgba(255,255,255,0.8);
     --th-card-bg: #ffffff;
     --th-footer-bg: #3e2a1e;
-    --th-footer-text: #e0b49e;
+    --th-footer-text: #a3725b;
 }
 
 /* ═══ DARK MODE ═══ */
@@ -751,3 +751,167 @@
 .dark .glass-card-premium {
     animation: border-shimmer 6s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════
+   IMMERSIVE NATURE BACKGROUND & PETAL WIND SYSTEM
+   ═══════════════════════════════════════════════ */
+
+/* Hero background elements toggled by theme */
+.hero-theme-bg {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+[data-color-theme="sage"] .sage-only { display: block; }
+[data-color-theme="lavender"] .lavender-only { display: block; }
+[data-color-theme="rose"] .rose-only { display: block; }
+[data-color-theme="ocean"] .ocean-only { display: block; }
+[data-color-theme="peach"] .peach-only { display: block; }
+
+/* Custom cursor overrides mapped to color theme */
+[data-color-theme="sage"] body {
+    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%23697a59'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%23697a59' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+}
+[data-color-theme="lavender"] body {
+    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%237c6fae'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%237c6fae' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+}
+[data-color-theme="rose"] body {
+    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%23c06c84'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%23c06c84' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+}
+[data-color-theme="ocean"] body {
+    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%234a90a4'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%234a90a4' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+}
+[data-color-theme="peach"] body {
+    cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='4' fill='%23be6542'/%3E%3Ccircle cx='16' cy='16' r='10' stroke='%23be6542' stroke-width='1.5' fill='none' opacity='0.6'/%3E%3Ccircle cx='16' cy='16' r='11' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.8'/%3E%3C/svg%3E") 16 16, auto;
+}
+
+/* Revert custom cursor to default pointer for interactive items */
+a, button, select, input, textarea, [role="button"],
+.filter-chip, .btn-nature, .cta-glow-btn, .assessment-card-glass {
+    cursor: pointer;
+}
+input, textarea {
+    cursor: text;
+}
+
+/* Canvas overlay for falling elements Y offset */
+#petalWindCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Individual falling element wrapper */
+.petal-wrapper {
+    position: absolute;
+    will-change: transform;
+    pointer-events: none;
+}
+
+/* Diagonal wind drift animation keyframes */
+@keyframes petal-drift-right {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    12% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(105vh) translateX(25vw);
+        opacity: 0;
+    }
+}
+
+@keyframes petal-drift-left {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    12% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(105vh) translateX(-25vw);
+        opacity: 0;
+    }
+}
+
+/* Sway animation for 3D rotation wobble */
+.petal-inner {
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+}
+
+@keyframes petal-sway-wide {
+    0%, 100% {
+        transform: rotate(0deg) scaleX(1) rotateY(0deg) rotateZ(0deg);
+    }
+    25% {
+        transform: rotate(20deg) scaleX(0.8) rotateY(80deg) rotateZ(15deg);
+    }
+    50% {
+        transform: rotate(45deg) scaleX(0.65) rotateY(180deg) rotateZ(35deg);
+    }
+    75% {
+        transform: rotate(20deg) scaleX(0.8) rotateY(100deg) rotateZ(20deg);
+    }
+}
+
+@keyframes petal-sway-narrow {
+    0%, 100% {
+        transform: rotate(10deg) scaleX(0.9) rotateY(0deg) rotateZ(5deg);
+    }
+    50% {
+        transform: rotate(-25deg) scaleX(1.05) rotateY(140deg) rotateZ(-20deg);
+    }
+}
+
+/* Scoped Features Grid Bento Cards (gradients & colored glow) */
+#how-it-works .glass-card-premium {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), var(--th-primary-light));
+    border-color: var(--th-border);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.02),
+        0 4px 20px var(--th-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+#how-it-works .glass-card-premium:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), var(--th-primary-light));
+    border-color: var(--th-primary);
+    box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.05),
+        0 8px 32px var(--th-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.dark #how-it-works .glass-card-premium {
+    background: linear-gradient(135deg, rgba(30, 30, 46, 0.75), rgba(255, 255, 255, 0.02));
+    border-color: var(--th-border);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.25),
+        0 4px 20px var(--th-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark #how-it-works .glass-card-premium:hover {
+    background: linear-gradient(135deg, rgba(30, 30, 46, 0.85), rgba(255, 255, 255, 0.04));
+    border-color: var(--th-primary);
+    box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.4),
+        0 8px 32px var(--th-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+

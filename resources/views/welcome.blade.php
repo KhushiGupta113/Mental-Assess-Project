@@ -1,9 +1,31 @@
 @extends('layouts.main')
 
 @section('content')
+{{-- ═══ Scroll Canvas for Falling Nature Elements ═══ --}}
+<div id="petalWindCanvas" class="fixed inset-0 pointer-events-none overflow-hidden" style="z-index: 10;" aria-hidden="true"></div>
+
 {{-- ═══ Hero Section ═══ --}}
 <section class="relative overflow-hidden bg-hero-gradient pb-20 pt-32 lg:pt-40" style="z-index:1;">
-    <div class="absolute inset-0 opacity-40 pointer-events-none overflow-hidden">
+    {{-- Immersive Thematic Nature Backgrounds --}}
+    <div class="absolute inset-0 opacity-30 dark:opacity-15 pointer-events-none overflow-hidden select-none z-0">
+        <!-- Sage: Forest -->
+        <img class="hero-theme-bg sage-only w-full h-full object-cover" src="{{ asset('images/bg_sage.png') }}" alt="Sage Forest Background">
+
+        <!-- Lavender: Lavender Field -->
+        <img class="hero-theme-bg lavender-only w-full h-full object-cover" src="{{ asset('images/bg_lavender.png') }}" alt="Lavender Field Background">
+
+        <!-- Rose: Rose Garden -->
+        <img class="hero-theme-bg rose-only w-full h-full object-cover" src="{{ asset('images/bg_rose.png') }}" alt="Rose Garden Background">
+
+        <!-- Ocean: Coastal Water -->
+        <img class="hero-theme-bg ocean-only w-full h-full object-cover" src="{{ asset('images/bg_ocean.png') }}" alt="Ocean View Background">
+
+        <!-- Peach: Autumn Sunset -->
+        <img class="hero-theme-bg peach-only w-full h-full object-cover" src="{{ asset('images/bg_peach.png') }}" alt="Peach Autumn Background">
+    </div>
+
+    {{-- Hero Blur Blobs --}}
+    <div class="absolute inset-0 opacity-40 pointer-events-none overflow-hidden z-0">
         <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-th-primary/20 blur-[100px]"></div>
         <div class="absolute top-1/2 -right-32 w-[30rem] h-[30rem] rounded-full bg-teal-400/20 blur-[120px]"></div>
         <div class="absolute bottom-0 left-1/3 w-[25rem] h-[25rem] rounded-full bg-th-accent/15 blur-[100px]"></div>
@@ -268,4 +290,120 @@
         </a>
     </div>
 </section>
+
+{{-- ═══ Scroll-Triggered Falling Petals / Leaves Script ═══ --}}
+<script>
+(function() {
+    const canvas = document.getElementById('petalWindCanvas');
+    if (!canvas) return;
+
+    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    let scrollAccumulator = 0;
+
+    function getTheme() {
+        return document.documentElement.getAttribute('data-color-theme') || 'sage';
+    }
+
+    function getPetalSVG(theme) {
+        if (theme === 'lavender') {
+            // Purple lavender flower bud
+            return `<svg viewBox="0 0 50 50" class="w-full h-full">
+                <path d="M25 5 C25 25 5 25 5 25 C5 25 25 25 25 45 C25 25 45 25 45 25 C45 25 25 25 25 5 Z" fill="var(--th-primary)" opacity="0.75"/>
+                <circle cx="25" cy="25" r="3.5" fill="var(--th-accent)" opacity="0.9"/>
+            </svg>`;
+        } else if (theme === 'rose') {
+            // Pink rose petal
+            return `<svg viewBox="0 0 50 50" class="w-full h-full">
+                <path d="M25 5 C38 5, 45 18, 45 32 C45 45, 25 48, 25 48 C25 48, 5 45, 5 32 C5 18, 12 5, 25 5 Z" fill="var(--th-primary)" opacity="0.75"/>
+            </svg>`;
+        } else if (theme === 'ocean') {
+            // Blue teardrop water leaf / bubble
+            return `<svg viewBox="0 0 50 50" class="w-full h-full">
+                <path d="M25 5 C35 15, 40 28, 40 38 C40 45, 33 48, 25 48 C17 48, 10 45, 10 38 C10 28, 15 15, 25 5 Z" fill="var(--th-primary)" opacity="0.7"/>
+            </svg>`;
+        } else if (theme === 'peach') {
+            // Autumn leaf
+            return `<svg viewBox="0 0 50 50" class="w-full h-full">
+                <path d="M25 2 C38 12, 45 30, 25 48 C5 30, 12 12, 25 2 Z" fill="var(--th-primary)" opacity="0.8"/>
+                <path d="M25 2 L25 48" stroke="var(--th-accent)" stroke-width="1.5" opacity="0.4"/>
+            </svg>`;
+        } else {
+            // Sage (Default): Sage Leaf
+            return `<svg viewBox="0 0 50 50" class="w-full h-full">
+                <path d="M25 5 C38 15, 38 35, 25 45 C12 35, 12 15, 25 5 Z" fill="var(--th-primary)" opacity="0.8"/>
+                <path d="M25 5 L25 45" stroke="var(--th-accent)" stroke-width="1.5" opacity="0.4"/>
+            </svg>`;
+        }
+    }
+
+    function spawnLeaf() {
+        const theme = getTheme();
+        const size = 16 + Math.random() * 16; // 16px - 32px (elegant and small)
+        const startX = Math.random() * 100; // Left offset %
+        const duration = 6 + Math.random() * 6; // 6s - 12s drift time
+        const delay = Math.random() * 0.2;
+        const driftAnim = Math.random() > 0.5 ? 'petal-drift-right' : 'petal-drift-left';
+        const swayAnim = Math.random() > 0.5 ? 'petal-sway-wide' : 'petal-sway-narrow';
+        const wobbleDur = 2.5 + Math.random() * 2.5;
+
+        const el = document.createElement('div');
+        el.className = 'petal-wrapper';
+        el.style.cssText = `
+            left: ${startX}%;
+            top: -40px;
+            width: ${size}px;
+            height: ${size}px;
+            animation: ${driftAnim} ${duration}s linear ${delay}s forwards;
+        `;
+
+        const inner = document.createElement('div');
+        inner.className = 'petal-inner';
+        inner.style.cssText = `
+            animation: ${swayAnim} ${wobbleDur}s ease-in-out infinite;
+        `;
+        inner.innerHTML = getPetalSVG(theme);
+        el.appendChild(inner);
+
+        canvas.appendChild(el);
+
+        // Remove from DOM when animation ends
+        setTimeout(() => {
+            el.remove();
+        }, (duration + delay) * 1000 + 100);
+    }
+
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Calculate Y scroll delta
+        if (scrollTop > lastScrollTop) {
+            const delta = scrollTop - lastScrollTop;
+            
+            // Only spawn past the hero section
+            const heroSection = document.querySelector('section');
+            const heroHeight = heroSection ? heroSection.offsetHeight : 600;
+
+            if (scrollTop > heroHeight - 120) {
+                scrollAccumulator += delta;
+                
+                // Spawn one leaf for every 80px scrolled down
+                const scrollStep = 80;
+                if (scrollAccumulator >= scrollStep) {
+                    const count = Math.min(3, Math.floor(scrollAccumulator / scrollStep)); // Cap at 3 per scroll tick for performance
+                    scrollAccumulator %= scrollStep;
+                    
+                    for (let i = 0; i < count; i++) {
+                        setTimeout(() => spawnLeaf(), i * 150);
+                    }
+                }
+            }
+        } else {
+            // Decay accumulator when scrolling up
+            scrollAccumulator = Math.max(0, scrollAccumulator + (scrollTop - lastScrollTop));
+        }
+        
+        lastScrollTop = scrollTop;
+    }, { passive: true });
+})();
+</script>
 @endsection
