@@ -1,6 +1,22 @@
 @extends('layouts.main')
 
 @section('content')
+<style>
+
+    #three-canvas {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 2 !important;
+        pointer-events: none !important;
+        display: block !important;
+    }
+</style>
+<canvas id="three-canvas" class="pointer-events-none"></canvas>
+
+<div class="relative" style="z-index:10;">
 {{-- ═══ Hero Section ═══ --}}
 <section class="relative overflow-hidden bg-hero-gradient pb-20 pt-32 lg:pt-40">
     <div class="absolute inset-0 opacity-40 pointer-events-none overflow-hidden">
@@ -130,7 +146,7 @@
 </style>
 
 {{-- ═══ Features Grid (Bento Style) ═══ --}}
-<section id="how-it-works" class="py-32" style="background:var(--th-card-bg)">
+<section id="how-it-works" class="py-32 bg-transparent">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-20" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-serif font-bold t-text mb-6">Everything you need, <br>in one peaceful space.</h2>
@@ -139,7 +155,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[280px]">
             <!-- Assessment Bento -->
-            <div class="md:col-span-2 md:row-span-2 t-surface rounded-[2rem] p-10 border border-th-border shadow-lg relative overflow-hidden group" data-aos="fade-up">
+            <div class="md:col-span-2 md:row-span-2 glass-card-solid p-10 relative overflow-hidden group" data-aos="fade-up">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 z-0 transition-opacity opacity-0 group-hover:opacity-100 duration-500"></div>
                 <div class="relative z-10 h-full flex flex-col justify-between">
                     <div>
@@ -158,7 +174,7 @@
             </div>
 
             <!-- Mood Tracking Bento -->
-            <div class="md:col-span-2 t-surface rounded-[2rem] p-8 border border-th-border shadow-lg relative overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+            <div class="md:col-span-2 glass-card-solid p-8 relative overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
                 <div class="relative z-10 flex items-center justify-between h-full">
                     <div class="max-w-[60%]">
                         <div class="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-900/30 flex items-center justify-center mb-4">
@@ -178,7 +194,7 @@
             </div>
 
             <!-- Smart Journal Bento -->
-            <div class="t-surface rounded-[2rem] p-8 border border-th-border shadow-lg relative group" data-aos="fade-up" data-aos-delay="200">
+            <div class="glass-card-solid p-8 relative group" data-aos="fade-up" data-aos-delay="200">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </div>
@@ -187,7 +203,7 @@
             </div>
 
             <!-- Resource Library Bento -->
-            <div class="t-surface rounded-[2rem] p-8 border border-th-border shadow-lg relative group" data-aos="fade-up" data-aos-delay="300">
+            <div class="glass-card-solid p-8 relative group" data-aos="fade-up" data-aos-delay="300">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center mb-4">
                     <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 </div>
@@ -252,7 +268,7 @@
 </section>
 
 {{-- ═══ Call to Action ═══ --}}
-<section class="py-32 relative overflow-hidden text-center bg-th-primary">
+<section class="py-32 relative overflow-hidden text-center" style="background:color-mix(in srgb, var(--th-primary) 90%, transparent)">
     <div class="absolute inset-0 opacity-20 pointer-events-none">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-white/20 blur-[100px] animate-breathe"></div>
     </div>
@@ -264,4 +280,251 @@
         </a>
     </div>
 </section>
+</div>{{-- end z-index:1 wrapper --}}
+
+{{-- Three.js + GSAP Scroll Animation (Stitch Reference) --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+function initThree() {
+    const canvas = document.getElementById('three-canvas');
+    if (!canvas) {
+        console.warn("three-canvas element not found on this page.");
+        return;
+    }
+
+    if (canvas.dataset.initialized) {
+        console.log("three-canvas already initialized.");
+        return;
+    }
+    canvas.dataset.initialized = 'true';
+
+    // Relocate canvas to document.body to ensure it is at the root stacking context and not obscured by any relative/absolute wrapper divs
+    document.body.appendChild(canvas);
+
+    // Respect reduced-motion preference
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        canvas.style.display = 'none';
+        return;
+    }
+
+    try {
+        if (typeof THREE === 'undefined' || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+            throw new Error("Missing dependencies: THREE, GSAP, or ScrollTrigger is not loaded.");
+        }
+
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // === Renderer ===
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const scene = new THREE.Scene();
+
+        // === Camera ===
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 12;
+
+        // === Lighting — rich, multi-source for theme-integrated glow ===
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        // Warm soft peach/yellow light from top-right
+        const pinkLight = new THREE.PointLight(0xffffff, 1.2, 50);
+        pinkLight.position.set(5, 5, 5);
+        scene.add(pinkLight);
+
+        // Cool soft light from bottom-left (will dynamically adapt to active theme)
+        const blueLight = new THREE.PointLight(0xffffff, 0.8, 50);
+        blueLight.position.set(-5, -5, 5);
+        scene.add(blueLight);
+
+        // Rim light from behind (lavender/theme halo)
+        const rimLight = new THREE.PointLight(0xffffff, 1.2, 50);
+        rimLight.position.set(0, 0, -5);
+        scene.add(rimLight);
+
+        // Extra highlight light that follows the shape
+        const followLight = new THREE.PointLight(0xffffff, 0.8, 30);
+        scene.add(followLight);
+
+        // === Main Shape — Large TorusKnot (representing neural pathways) ===
+        const knotGeometry = new THREE.TorusKnotGeometry(2.4, 0.72, 128, 32);
+        
+        // Dynamic glassmorphic material with rich, solid theme color (no neon emission glow)
+        const knotMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xc4b5fd,          // Will be overridden by active theme's primary color
+            emissive: 0x000000,       // No self-illumination to prevent neon appearance
+            emissiveIntensity: 0.0,
+            roughness: 0.18,          // Satin glossy finish to keep color rich
+            metalness: 0.12,          // Slight metallic depth without washing out colors
+            transparent: true,
+            opacity: 0.98,            // High base opacity to keep color solid and vibrant
+            transmission: 0.05,       // Very low transmission to prevent diluting color saturation
+            ior: 1.50,
+            clearcoat: 1.0,           // Premium glass outer layer
+            clearcoatRoughness: 0.1,
+            reflectivity: 0.6,        // Good reflections
+            side: THREE.DoubleSide
+        });
+        const knot = new THREE.Mesh(knotGeometry, knotMaterial);
+
+        // Start position: bottom-left, behind content
+        const aspect = window.innerWidth / window.innerHeight;
+        knot.position.x = -aspect * 1.5;
+        knot.position.y = -1;
+        scene.add(knot);
+
+        // === Theme/Color Helpers ===
+        function getCSSColor(varName, fallback) {
+            const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+            return val || fallback;
+        }
+
+        // === Theme Synchronization ===
+        let targetColor = new THREE.Color('#7c6fae');
+        let targetEmissive = new THREE.Color('#e091b5');
+        let targetRim = new THREE.Color('#e8e4f3');
+        let targetFollow = new THREE.Color('#f5f3fa');
+
+        function updateThemeColors() {
+            // Fetch active colors directly from CSS variables to ensure perfect alignment with theme
+            const primaryColor = getCSSColor('--th-primary', '#7c6fae');
+            const accentColor = getCSSColor('--th-accent', '#e091b5');
+            const lightColor = getCSSColor('--th-primary-light', '#e8e4f3');
+
+            targetColor.set(primaryColor);
+            targetEmissive.set(accentColor);
+            targetFollow.set(accentColor);
+            targetRim.set(lightColor);
+        }
+
+        updateThemeColors();
+
+        const observer = new MutationObserver(updateThemeColors);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class', 'data-color-theme']
+        });
+
+        // === GSAP ScrollTrigger — scrub shape across screen ===
+        gsap.to(knot.rotation, {
+            y: "+=" + Math.PI * 2,
+            x: "+=" + Math.PI,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1
+            }
+        });
+
+        gsap.to(knot.position, {
+            x: aspect * 1.5,
+            y: 0.5,
+            ease: "power1.inOut",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5
+            }
+        });
+
+        gsap.to(knot.scale, {
+            x: 1.25,
+            y: 1.25,
+            z: 1.25,
+            ease: "power2.inOut",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "50% 50%",
+                scrub: 1
+            }
+        });
+        gsap.to(knot.scale, {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+            ease: "power2.inOut",
+            scrollTrigger: {
+                trigger: "body",
+                start: "50% 50%",
+                end: "bottom bottom",
+                scrub: 1
+            }
+        });
+
+        // === Resize Handler ===
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            const currentProgress = ScrollTrigger.getAll()[0]?.progress || 0;
+            if (currentProgress === 0) {
+                const newAspect = window.innerWidth / window.innerHeight;
+                knot.position.x = -newAspect * 1.5;
+            }
+        });
+
+        // === Animation Loop ===
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            knot.rotation.y += 0.0015;
+            knot.rotation.x += 0.0007;
+
+            knotMaterial.color.lerp(targetColor, 0.08);
+
+            blueLight.color.lerp(targetEmissive, 0.08);
+            rimLight.color.lerp(targetRim, 0.08);
+            followLight.color.lerp(targetFollow, 0.08);
+
+            // Keep emissive intensity at 0 to avoid neon appearance, letting the rich theme-specific diffuse colors shine
+            knotMaterial.emissiveIntensity = 0.0;
+
+            followLight.position.copy(knot.position);
+            followLight.position.z += 3;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+        console.log("three-canvas scroll animation successfully running.");
+
+    } catch (err) {
+        console.error("Three.js or GSAP initialization failed:", err);
+        // Render a visible, helpful error banner in development mode if something breaks
+        const errDiv = document.createElement('div');
+        errDiv.style.position = 'fixed';
+        errDiv.style.bottom = '10px';
+        errDiv.style.left = '10px';
+        errDiv.style.background = 'rgba(220, 38, 38, 0.9)';
+        errDiv.style.color = '#ffffff';
+        errDiv.style.padding = '8px 12px';
+        errDiv.style.borderRadius = '6px';
+        errDiv.style.fontSize = '12px';
+        errDiv.style.zIndex = '99999';
+        errDiv.style.fontFamily = 'monospace';
+        errDiv.style.pointerEvents = 'none';
+        errDiv.textContent = `ThreeJS/GSAP error: ${err.message}`;
+        document.body.appendChild(errDiv);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThree);
+} else {
+    initThree();
+}
+</script>
 @endsection
