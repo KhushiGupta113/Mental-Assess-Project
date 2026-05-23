@@ -307,7 +307,10 @@
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                                 'Accept': 'application/json',
                             },
-                            body: JSON.stringify({ message: text }),
+                            body: JSON.stringify({ 
+                                message: text,
+                                history: this.messages.slice(0, -1)
+                            }),
                         });
 
                         const data = await resp.json();

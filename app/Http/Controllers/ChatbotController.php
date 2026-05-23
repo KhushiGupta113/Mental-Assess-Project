@@ -12,11 +12,15 @@ class ChatbotController extends Controller
     {
         $request->validate([
             'message' => 'required|string|max:1000',
+            'history' => 'nullable|array',
+            'history.*.role' => 'required|string|in:user,bot',
+            'history.*.text' => 'required|string|max:2000',
         ]);
 
         $userMessage = $request->input('message');
+        $history = $request->input('history', []);
         $aiService = new AIService();
-        $response = $aiService->chat($userMessage, Auth::user());
+        $response = $aiService->chat($userMessage, Auth::user(), $history);
 
         return response()->json([
             'reply' => $response,

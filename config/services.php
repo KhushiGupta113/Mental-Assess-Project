@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'gemini' => [
+        'key' => env('AI_API_KEY', env('GEMINI_API_KEY', '')),
+    ],
+
 ];
