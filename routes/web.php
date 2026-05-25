@@ -9,7 +9,18 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\CrisisController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ModesController;
 use Illuminate\Support\Facades\Route;
+
+// ═══ Wellness Modes (Public) ═══
+Route::prefix('modes')->name('modes.')->group(function () {
+    Route::get('/', [ModesController::class, 'index'])->name('index');
+    Route::get('/breathe', [ModesController::class, 'breathe'])->name('breathe');
+    Route::get('/meditate', [ModesController::class, 'meditate'])->name('meditate');
+    Route::get('/focus', [ModesController::class, 'focus'])->name('focus');
+    Route::get('/music', [ModesController::class, 'music'])->name('music');
+    Route::get('/sleep', [ModesController::class, 'sleep'])->name('sleep');
+});
 
 // ═══ Public Pages ═══
 Route::get('/', function () {

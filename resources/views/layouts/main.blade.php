@@ -30,6 +30,81 @@
 
         <!-- Marked.js for chatbot markdown -->
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        
+        <!-- Soundscapes Web Audio Engine -->
+        <script src="{{ asset('js/soundscapes.js') }}"></script>
+
+        <!-- Swup SPA integration -->
+        <script src="https://unpkg.com/swup@4"></script>
+        <script src="https://unpkg.com/@swup/scripts-plugin@3"></script>
+        <style>
+            /* Swup transition classes */
+            .transition-fade {
+                transition: 0.3s opacity, 0.3s transform;
+                opacity: 1;
+                transform: translateY(0);
+            }
+            html.is-animating .transition-fade {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        </style>
+        
+        <!-- Global Audio Store -->
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('globalAudio', {
+                    activeSounds: {},
+                    allPaused: false,
+                    audioCtx: null,
+                    masterVolume: 70,
+                    
+                    get activeCount() {
+                        return Object.keys(this.activeSounds).length;
+                    },
+                    
+                    ensureAudioContext() {
+                        if (!this.audioCtx) {
+                            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        }
+                        if (this.audioCtx.state === 'suspended') {
+                            this.audioCtx.resume();
+                        }
+                    },
+                    
+                    stopAll() {
+                        Object.keys(this.activeSounds).forEach(id => {
+                            const s = this.activeSounds[id];
+                            if (s) {
+                                try {
+                                    if (s.generator && s.generator.stop) s.generator.stop();
+                                    if (s.gainNode) s.gainNode.disconnect();
+                                } catch(e) {}
+                            }
+                        });
+                        this.activeSounds = {};
+                        this.allPaused = false;
+                    },
+                    
+                    pauseAll() {
+                        if (!this.audioCtx) return;
+                        if (this.allPaused) {
+                            this.audioCtx.resume();
+                            this.allPaused = false;
+                        } else {
+                            this.audioCtx.suspend();
+                            this.allPaused = true;
+                        }
+                    }
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                window.swup = new Swup({
+                    plugins: [new SwupScriptsPlugin()]
+                });
+            });
+        </script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -51,6 +126,7 @@
                     <div class="hidden md:flex items-center space-x-1">
                         <a href="{{ route('assessments.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('assessments.*') ? 'nav-link-active' : '' }}">Assessments</a>
                         <a href="{{ route('resources.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('resources.*') ? 'nav-link-active' : '' }}">Resources</a>
+                        <a href="{{ route('modes.index') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('modes.*') ? 'nav-link-active' : '' }}">Modes</a>
                         <a href="{{ route('about') }}" class="nav-link px-3 py-2 rounded-lg {{ request()->routeIs('about') ? 'nav-link-active' : '' }}">About</a>
                         <a href="{{ route('crisis.index') }}" class="text-red-500 hover:text-red-600 font-semibold text-sm px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Crisis Help</a>
                     </div>
@@ -120,6 +196,7 @@
             <div x-show="mobileOpen" x-transition class="md:hidden t-card border-t border-th-border px-4 py-4 space-y-2">
                 <a href="{{ route('assessments.index') }}" class="block px-3 py-2 rounded-lg t-text hover:t-surface">Assessments</a>
                 <a href="{{ route('resources.index') }}" class="block px-3 py-2 rounded-lg t-text hover:t-surface">Resources</a>
+                <a href="{{ route('modes.index') }}" class="block px-3 py-2 rounded-lg t-text hover:t-surface">Modes</a>
                 <a href="{{ route('about') }}" class="block px-3 py-2 rounded-lg t-text hover:t-surface">About</a>
                 <a href="{{ route('crisis.index') }}" class="block px-3 py-2 rounded-lg text-red-500 font-semibold hover:bg-red-50">Crisis Help</a>
                 @auth
@@ -138,7 +215,7 @@
         </nav>
 
         {{-- ═══ Main Content ═══ --}}
-        <main class="flex-grow">
+        <main id="swup" class="transition-fade flex-grow">
             @yield('content')
         </main>
 
@@ -161,6 +238,7 @@
                         <ul class="space-y-2 text-sm">
                             <li><a href="{{ route('assessments.index') }}" class="hover:text-white transition-colors">Assessments</a></li>
                             <li><a href="{{ route('resources.index') }}" class="hover:text-white transition-colors">Resources</a></li>
+                            <li><a href="{{ route('modes.index') }}" class="hover:text-white transition-colors">Modes</a></li>
                             <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">About</a></li>
                         </ul>
                     </div>
@@ -178,6 +256,34 @@
                 </div>
             </div>
         </footer>
+
+        {{-- ═══ Global Audio Widget ═══ --}}
+        <div x-data x-show="$store.globalAudio.activeCount > 0" x-cloak x-transition
+             class="fixed z-50 glass-card-premium px-4 py-3 rounded-2xl flex items-center gap-4 shadow-2xl border-th-primary"
+             style="bottom: 5rem; left: 1.5rem;">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center animate-pulse" style="background: linear-gradient(135deg, var(--th-primary), var(--th-accent));">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/></svg>
+                </div>
+                <div>
+                    <p class="text-xs font-bold t-text">Now Playing</p>
+                    <p class="text-[10px] t-light" x-text="$store.globalAudio.activeCount + ' Sounds Active'"></p>
+                </div>
+            </div>
+            <div class="h-8 w-px bg-th-border mx-1"></div>
+            <div class="flex items-center gap-2">
+                <button @click="$store.globalAudio.pauseAll()"
+                        class="w-8 h-8 rounded-full flex items-center justify-center bg-th-surface border border-th-border hover:bg-th-primary-light hover:text-th-primary transition-colors"
+                        :title="$store.globalAudio.allPaused ? 'Resume' : 'Pause'">
+                    <svg x-show="!$store.globalAudio.allPaused" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+                    <svg x-show="$store.globalAudio.allPaused" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button @click="$store.globalAudio.stopAll()"
+                        class="w-8 h-8 rounded-full flex items-center justify-center bg-red-50 text-red-500 hover:bg-red-100 transition-colors" title="Stop All">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                </button>
+            </div>
+        </div>
 
         {{-- ═══ AI Chatbot Widget ═══ --}}
         <div x-data="chatbot()" x-cloak class="fixed bottom-6 right-6 z-50">
