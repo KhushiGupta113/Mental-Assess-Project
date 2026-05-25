@@ -2,7 +2,7 @@
 
 @section('content')
 {{-- ═══ Scroll Canvas for Falling Nature Elements ═══ --}}
-<div id="petalWindCanvas" class="fixed inset-0 pointer-events-none overflow-hidden" style="z-index: 10;" aria-hidden="true"></div>
+<div id="petalWindCanvas" class="absolute inset-0 pointer-events-none overflow-hidden" style="z-index: 10;" aria-hidden="true"></div>
 
 {{-- ═══ Hero Section ═══ --}}
 <section class="relative overflow-hidden bg-hero-gradient pb-20 pt-32 lg:pt-40" style="z-index:1;">
@@ -346,11 +346,12 @@
         const swayAnim = Math.random() > 0.5 ? 'petal-sway-wide' : 'petal-sway-narrow';
         const wobbleDur = 2.5 + Math.random() * 2.5;
 
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const el = document.createElement('div');
         el.className = 'petal-wrapper';
         el.style.cssText = `
             left: ${startX}%;
-            top: -40px;
+            top: ${scrollTop - 40}px;
             width: ${size}px;
             height: ${size}px;
             animation: ${driftAnim} ${duration}s linear ${delay}s forwards;
@@ -372,38 +373,36 @@
         }, (duration + delay) * 1000 + 100);
     }
 
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // Calculate Y scroll delta
-        if (scrollTop > lastScrollTop) {
-            const delta = scrollTop - lastScrollTop;
-            
-            // Only spawn past the hero section
-            const heroSection = document.querySelector('section');
-            const heroHeight = heroSection ? heroSection.offsetHeight : 600;
+    // Spawn a new leaf at regular intervals
+    let spawnInterval;
+    
+    function startSpawning() {
+        // Adjust the interval to control quantity. Lower = more leaves.
+        // 400ms = 2.5 leaves per second
+        spawnInterval = setInterval(() => {
+            spawnLeaf();
+        }, 400);
+    }
 
-            if (scrollTop > heroHeight - 120) {
-                scrollAccumulator += delta;
-                
-                // Spawn one leaf for every 80px scrolled down
-                const scrollStep = 80;
-                if (scrollAccumulator >= scrollStep) {
-                    const count = Math.min(3, Math.floor(scrollAccumulator / scrollStep)); // Cap at 3 per scroll tick for performance
-                    scrollAccumulator %= scrollStep;
-                    
-                    for (let i = 0; i < count; i++) {
-                        setTimeout(() => spawnLeaf(), i * 150);
-                    }
-                }
-            }
+    function stopSpawning() {
+        clearInterval(spawnInterval);
+    }
+
+    startSpawning();
+
+    // Pause spawning if the tab is not active to save resources
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopSpawning();
         } else {
-            // Decay accumulator when scrolling up
-            scrollAccumulator = Math.max(0, scrollAccumulator + (scrollTop - lastScrollTop));
+            startSpawning();
         }
-        
-        lastScrollTop = scrollTop;
-    }, { passive: true });
+    });
+
+    // We can also spawn a few extra ones right at page load
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => spawnLeaf(), i * 300);
+    }
 })();
 </script>
 @endsection
