@@ -158,7 +158,7 @@
             </div>
 
             {{-- Sound toggle --}}
-            <label class="flex items-center gap-2 cursor-pointer mt-2 mb-2" x-show="!isRunning && !isPaused">
+            <label class="flex items-center gap-2 cursor-pointer m-2" x-show="!isRunning && !isPaused">
                 <div class="relative">
                     <input type="checkbox" x-model="soundEnabled" class="sr-only">
                     <div class="w-10 h-5 rounded-full transition-colors duration-300 flex items-center"
