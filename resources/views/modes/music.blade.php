@@ -9,15 +9,8 @@
 <div class="min-h-screen py-8 md:py-12 pb-32" x-data="soundscapeMixer()" x-init="init()" @keydown.space.prevent="toggleAll()">
 
 {{-- ═══ Hero Section ═══ --}}
-<section class="relative overflow-hidden pt-20 pb-16 lg:pt-28 lg:pb-20" style="z-index:1;">
-    {{-- Background Blur Blobs --}}
-    <div class="absolute inset-0 opacity-40 pointer-events-none overflow-hidden z-0">
-        <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full blur-[100px]" style="background:var(--th-primary);opacity:0.15;"></div>
-        <div class="absolute top-1/2 -right-32 w-[30rem] h-[30rem] rounded-full blur-[120px]" style="background:var(--th-accent);opacity:0.12;"></div>
-        <div class="absolute bottom-0 left-1/3 w-[25rem] h-[25rem] rounded-full blur-[100px]" style="background:var(--th-primary);opacity:0.1;"></div>
-    </div>
-
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-8">
+<section class="relative pt-12 pb-8 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
         {{-- Back Button --}}
         <div class="flex justify-start mb-6">
@@ -30,11 +23,11 @@
         </div>
 
         <div data-aos="fade-up" data-aos-delay="100">
-            <h1 class="text-3xl md:text-4xl font-serif font-extrabold t-text leading-tight mb-4 tracking-tight">
-                Ambient <span class="text-gradient-nature">Soundscapes</span>
+            <h1 class="text-3xl md:text-4xl font-serif font-extrabold t-text leading-tight mb-3">
+                Ambient Soundscapes
             </h1>
 
-            <p class="text-lg md:text-xl t-muted mb-8 leading-relaxed max-w-2xl mx-auto">
+            <p class="text-base md:text-lg t-muted mb-6 leading-relaxed max-w-2xl mx-auto">
                 Layer soothing sounds to create your perfect atmosphere. Every sound is generated in real-time — no downloads needed.
             </p>
         </div>
@@ -57,9 +50,9 @@
         </div>
 
         {{-- Controls Panel --}}
-        <div class="flex flex-wrap items-center justify-center gap-3 mt-6 p-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="flex flex-wrap items-center justify-center gap-4 mt-6" data-aos="fade-up" data-aos-delay="300">
             {{-- Master Volume --}}
-            <div class="glass-card-premium px-4 py-2.5 flex items-center gap-3">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full px-5 py-2.5 flex items-center gap-3 shadow-sm">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--th-primary);">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                 </svg>
@@ -72,7 +65,7 @@
             </div>
 
             {{-- Timer --}}
-            <div class="glass-card-premium px-4 py-2.5 flex items-center gap-3">
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full px-5 py-2.5 flex items-center gap-3 shadow-sm">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--th-accent);">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -90,7 +83,7 @@
             </div>
 
             {{-- Playback Controls --}}
-            <div class="glass-card-premium px-3 py-1.5 flex items-center gap-1.5" x-show="$store.globalAudio.activeCount > 0" x-transition>
+            <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-sm" x-show="$store.globalAudio.activeCount > 0" x-transition>
                 <button @click="$store.globalAudio.pauseAll()" id="soundscape-pause-all-btn"
                         class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90"
                         style="background:var(--th-primary-light);color:var(--th-primary);"
@@ -134,9 +127,9 @@
                 {{-- Sound Cards Grid --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     <template x-for="sound in category.sounds" :key="sound.id">
-                        <div class="glass-card-premium p-5 transition-all duration-400 relative group"
+                        <div class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm p-5 transition-all duration-400 relative group"
                              :class="isActive(sound.id) ? 'soundscape-card-active' : ''"
-                             :style="isActive(sound.id) ? 'box-shadow: 0 0 20px var(--th-glow), 0 8px 32px rgba(0,0,0,0.06); border-color: var(--th-primary);' : ''">
+                             :style="isActive(sound.id) ? 'box-shadow: 0 0 15px var(--th-glow); border-color: var(--th-primary);' : ''">
 
                             {{-- Active glow overlay --}}
                             <div x-show="isActive(sound.id) && !allPaused" x-transition
