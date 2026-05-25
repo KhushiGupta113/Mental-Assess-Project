@@ -382,16 +382,19 @@ function focusTimer() {
         // ─── Ambient sound ───
         ambientSounds: {
             none: { label: 'None', generator: null },
-            rain: { label: 'Rain', generator: 'lightRain' },
-            forest: { label: 'Forest', generator: 'forest' },
-            ocean: { label: 'Ocean', generator: 'oceanWaves' },
-            river: { label: 'River', generator: 'riverStream' },
-            fire: { label: 'Campfire', generator: 'campfire' },
-            bowls: { label: 'Bowls', generator: 'singingBowls' },
+            rain: { label: 'Rain', generator: 'externalAudio', url: '/audio/light-rain.mp3' },
+            forest: { label: 'Forest', generator: 'externalAudio', url: '/audio/forest.mp3' },
+            ocean: { label: 'Ocean', generator: 'externalAudio', url: '/audio/ocean-waves.mp3' },
+            river: { label: 'River', generator: 'externalAudio', url: '/audio/river-stream.mp3' },
+            fire: { label: 'Campfire', generator: 'externalAudio', url: '/audio/campfire.mp3' },
+            bowls: { label: 'Bowls', generator: 'externalAudio', url: '/audio/tibetan-bowl.mp3' },
             binaural: { label: 'Binaural', generator: 'binauralBeats' },
             white: { label: 'White Noise', generator: 'whiteNoise' },
             brown: { label: 'Brown Noise', generator: 'brownNoise' },
             pink: { label: 'Pink Noise', generator: 'pinkNoise' },
+            piano: { label: 'Soft Piano', generator: 'externalAudio', url: '/audio/soft-piano.mp3' },
+            piano_bg: { label: 'Piano BG', generator: 'externalAudio', url: '/audio/piano-bg.mp3' },
+            handpan: { label: 'Handpan', generator: 'externalAudio', url: '/audio/handpan-music.mp3' },
         },
         ambientSound: 'none',
         ambientPlaying: false,
@@ -738,6 +741,7 @@ function focusTimer() {
                 }
                 
                 const generatorName = this.ambientSounds[this.ambientSound].generator;
+                const url = this.ambientSounds[this.ambientSound].url;
                 if (!generatorName || !window.SoundscapeGenerators) return;
 
                 this.gainNode = this.audioCtx.createGain();
@@ -745,7 +749,7 @@ function focusTimer() {
                 this.gainNode.gain.linearRampToValueAtTime(0.3, this.audioCtx.currentTime + 1);
                 this.gainNode.connect(this.audioCtx.destination);
 
-                this.ambientNode = window.SoundscapeGenerators[generatorName](this.audioCtx, this.gainNode);
+                this.ambientNode = window.SoundscapeGenerators[generatorName](this.audioCtx, this.gainNode, url);
                 this.ambientPlaying = true;
             } catch (e) {
                 console.warn('Web Audio API not available:', e);

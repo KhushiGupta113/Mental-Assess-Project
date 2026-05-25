@@ -273,23 +273,33 @@
                         Reset
                     </button>
 
-                    {{-- Ambient Sound Toggle (mini) --}}
-                    <button id="meditate-sound-btn"
-                        x-show="ambientSound !== 'none'"
-                        @click="toggleAmbientDuring()"
-                        class="p-2.5 rounded-xl border transition-all duration-300"
-                        :style="ambientPlaying
-                            ? 'background: var(--th-primary-light); border-color: var(--th-primary); color: var(--th-primary);'
-                            : 'background: var(--th-surface); border-color: var(--th-border-strong); color: var(--th-text-light);'"
-                        :title="ambientPlaying ? 'Mute ambient sound' : 'Enable ambient sound'">
-                        <svg x-show="ambientPlaying" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                        </svg>
-                        <svg x-show="!ambientPlaying" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
-                        </svg>
-                    </button>
+                    {{-- Ambient Sound Toggle (mini) & Selector --}}
+                    <div class="flex items-center gap-1.5" x-show="ambientSound !== 'none'">
+                        <button id="meditate-sound-btn"
+                            @click="toggleAmbientDuring()"
+                            class="p-2.5 rounded-xl border transition-all duration-300 flex-shrink-0"
+                            :style="ambientPlaying
+                                ? 'background: var(--th-primary-light); border-color: var(--th-primary); color: var(--th-primary);'
+                                : 'background: var(--th-surface); border-color: var(--th-border-strong); color: var(--th-text-light);'"
+                            :title="ambientPlaying ? 'Mute ambient sound' : 'Enable ambient sound'">
+                            <svg x-show="ambientPlaying" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                            </svg>
+                            <svg x-show="!ambientPlaying" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+                            </svg>
+                        </button>
+                        
+                        <select x-show="ambientPlaying" x-model="ambientSound" @change="changeAmbientDuring()"
+                                class="bg-white/50 dark:bg-black/30 border border-gray-200 dark:border-white/10 rounded-xl px-2 py-2 text-sm t-text focus:outline-none focus:border-[var(--th-primary)] transition-colors appearance-none cursor-pointer">
+                            <template x-for="(audio, key) in ambientSounds" :key="key">
+                                <template x-if="key !== 'none'">
+                                    <option :value="key" x-text="audio.label"></option>
+                                </template>
+                            </template>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -368,14 +378,15 @@ function meditationApp() {
         
         ambientSounds: {
             none: { label: 'None', generator: null },
-            rain: { label: 'Rain', generator: 'lightRain' },
-            forest: { label: 'Nature', generator: 'forest' },
-            river: { label: 'Water', generator: 'riverStream' },
+            rain: { label: 'Rain', generator: 'externalAudio', url: '/audio/light-rain.mp3' },
+            forest: { label: 'Nature', generator: 'externalAudio', url: '/audio/forest.mp3' },
+            river: { label: 'Water', generator: 'externalAudio', url: '/audio/river-stream.mp3' },
             pad: { label: 'Ethereal Pad', generator: 'binauralBeats' },
-            bowls: { label: 'Tibetan Bowls', generator: 'singingBowls' },
-            piano: { label: 'Pixabay Piano', generator: 'externalAudio', url: '/audio/relaxing_piano.webm' },
-            ambient_sleep: { label: 'Pixabay Sleep', generator: 'externalAudio', url: '/audio/ambient_sleep.webm' },
-            meditation: { label: 'Pixabay Meditate', generator: 'externalAudio', url: '/audio/relaxing_meditation.webm' },
+            bowls: { label: 'Tibetan Bowls', generator: 'externalAudio', url: '/audio/tibetan-bowl.mp3' },
+            flute: { label: 'Bamboo Flute', generator: 'externalAudio', url: '/audio/bamboo-flute.mp3' },
+            handpan: { label: 'Handpan Music', generator: 'externalAudio', url: '/audio/handpan-music.mp3' },
+            piano: { label: 'Soft Piano', generator: 'externalAudio', url: '/audio/soft-piano.mp3' },
+            meditation: { label: 'Rain Meditation', generator: 'externalAudio', url: '/audio/rain-meditation.mp3' },
         },
         ambientSound: 'none',
         ambientPlaying: false,
@@ -694,6 +705,16 @@ function meditationApp() {
                 this.startAmbientSound();
             } else {
                 this.stopAmbientSound();
+            }
+        },
+
+        changeAmbientDuring() {
+            if (this.ambientPlaying && (this.isRunning && !this.isPaused)) {
+                this.stopAmbientSound();
+                // Wait for the fade out to finish before starting the new sound
+                setTimeout(() => {
+                    this.startAmbientSound();
+                }, 1300);
             }
         },
 

@@ -235,15 +235,15 @@ function sleepApp() {
         selectedSound: 'drone',
         ambientSounds: {
             drone: { label: 'Deep Sleep Drone', generator: 'brownNoise' },
-            rain: { label: 'Gentle Rain', generator: 'lightRain' },
-            ocean: { label: 'Ocean Waves', generator: 'oceanWaves' },
-            forest: { label: 'Night Forest', generator: 'forest' },
+            rain: { label: 'Gentle Rain', generator: 'externalAudio', url: '/audio/light-rain.mp3' },
+            ocean: { label: 'Ocean Waves', generator: 'externalAudio', url: '/audio/ocean-waves.mp3' },
+            forest: { label: 'Night Forest', generator: 'externalAudio', url: '/audio/forest.mp3' },
             crickets: { label: 'Crickets', generator: 'crickets' },
-            bowls: { label: 'Tibetan Bowls', generator: 'singingBowls' },
+            bowls: { label: 'Tibetan Bowls', generator: 'externalAudio', url: '/audio/tibetan-bowl.mp3' },
             binaural: { label: 'Ethereal Pad', generator: 'binauralBeats' },
-            piano: { label: 'Pixabay Piano', generator: 'externalAudio', url: '/audio/relaxing_piano.webm' },
-            ambient_sleep: { label: 'Pixabay Sleep', generator: 'externalAudio', url: '/audio/ambient_sleep.webm' },
-            meditation: { label: 'Pixabay Meditate', generator: 'externalAudio', url: '/audio/relaxing_meditation.webm' },
+            lullaby: { label: 'Sleep Lullaby', generator: 'externalAudio', url: '/audio/sleep-lullaby.mp3' },
+            asmr: { label: 'Sleep Rain ASMR', generator: 'externalAudio', url: '/audio/sleep-rain-asmr.mp3' },
+            ambient_forest: { label: 'Ambient Forest Rain', generator: 'externalAudio', url: '/audio/ambient-forest-rain.mp3' },
         },
 
         // Audio
